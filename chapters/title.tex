@@ -1,0 +1,44 @@
+\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+% Imperial Logo
+\includegraphics[width=0.4\linewidth]{figures/imperial.png}
+\bigskip \bigskip
+\center % Center everything on the page
+
+% Headings
+\textsc{\LARGE \reporttype}\\[1.5cm]
+\textsc{\Large Imperial College London}\\[0.5cm]
+\textsc{\large Department of Computing}\\[0.5cm]
+
+% Title
+\makeatletter
+\HRule \\[0.4cm]
+{ \huge \bfseries \@title}\\% Title of your document
+\HRule \\[1.5cm]
+
+% Author
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\emph{Author:}\\
+\@author % Your name
+\end{flushleft}
+\end{minipage}
+~
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\emph{Supervisor:} \\
+\supervisor \\[1.2em] % Supervisor's Name
+\emph{Second Marker:} \\
+\secondmarker % second marker's name
+\end{flushright}
+\end{minipage}\\[2cm]
+\makeatother
+
+{\large \today} % Date
+
+
+\vfill % Fill the rest of the page with whitespace
+Submitted in partial fulfillment of the requirements for the \degreetype ~of Imperial College London
+    
+\end{titlepage}
