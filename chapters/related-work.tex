@@ -1,0 +1,21 @@
+\section{Automatic Detection and Segmentation of Crohn's Disease Tissues from Abdominal MRI}
+
+We need to go back to a decade ago to see the initial accomplishments of applying deep learning techniques to medical image analysis. In 2013, Mahapara et al. \cite{mahapatra2013automatic} first proposed a machine learning-based method for segmenting parts of the bowel for detecting Crohn's disease tissues on MRI scans. \medskip
+
+\noindent The pipeline firstly oversegmented the given MR image test volume into supervoxels and applied Random Forest (RF) classifiers to classify supervoxels containing diseased tissues, where these supervoxels define the Volume of Interest (VOI). Another set of RF classifiers is used on the test volume to generate a probability map, which indicates the probability of each voxel being diseased tissue, normal tissue or background. \medskip
+
+\noindent The experimental results showed that the pipeline achieved a decent segmentation performance, with a dice metric value of \(0.90 \pm 0.04\) and a Hausdorff distance of \(7.3 \pm 0.8\) mm. However, this approach is computationally expensive and inefficient since each instance takes a long time for testing, each pipeline stage requires fine-tuning, and the architecture leaves lots of room for improvement.
+
+\section{Automatic Detection of Bowel Disease with Residual Networks}
+Holland et al. \cite{holland2019automatic} proposed an end-to-end residual network \cite{he2016deep} with a soft attention layer \cite{schlemper2019attention} to automate the detection of Crohn's disease. The detection is not based on any of the semantic segmentation work but only seeking for the terminal ileum. Consequently, they revealed the feasibility of using a deep learning algorithm for identifying terminal ileum Crohn's Disease from abdominal MRI. \medskip
+
+\noindent From experimental results, the best result with localised data and a semiautomatic setting achieved a weighted-f1 score \(0.83\), which is strongly correlated with the MaRIA \cite{rimola2009magnetic} score, the current clinical standard. Also, the performance is slightly inefficient when a fully automatic invariant is included. \medskip
+
+\noindent They suggested that the performance of the model is highly dependent on the level of localisation in the training data and argued that gathering gold-standard segmentations of terminal ilium will be beneficial as a predecessor task if a better performance of the automatic detection needs to achieve.
+
+
+\section{Machine learning methods to predict the presence of intestine damage in patients with Crohn’s disease}
+
+Enchakalody et al. \cite{enchakalody2020machine} proposed two classifiers for aiding improvements of the reliability of Crohn's Disease in diagnosis and monitoring by looking into cross-sectional views of a small-intestine segment and detecting diseased issues. The classifiers are implemented based on Random Forest (RF) with ensembling and Convolutional Neural Network (CNN). \medskip
+
+\noindent From the experimental result, both techniques can differentiate diseased and normal small bowel tissue with similar performance, even compared to the case with expert radiologists present. However, this study mainly focused on CT-enterography data, which slightly deviated from our cases with MRI data. And until the day of writing this report, there is still no fully automatic approach for diagnosing Crohn's disease on cross-sectional imaging that reaches the level of expert radiologists.
