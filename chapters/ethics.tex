@@ -1,0 +1,5 @@
+In this project, ethics were carefully considered. The project involves further processing of the previously collected medical data, including image registration and data augmentation, and merging of the existing datasets as well. \medskip
+
+\noindent However, all MRI scans were processed and approved by clinical radiologists at St Mark Hospital. All sensitive personal data, such as names, genders, ages and ID numbers, were removed. Consequently, patients' identities can not be traced back from the medical data. \medskip
+
+\noindent For the model-training procedure, since we are using the nnU-Net framework with convolutional layers involved, the model learns from data by extracting features. The model will not store original training data but create feature maps in this case. In other words, the training data cannot be recovered from the model, so personal data privacy is preserved.
