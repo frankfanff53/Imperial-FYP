@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "tacking-crohns"
+version = "0.1.0"
+description = "Software Archive for Final Year Project 'Tacking Crohn's disease'"
+authors = ["Feifan Fan <frankfanff53@gmail.com>"]
+readme = "README.md"
+packages = [{include = "crohns"}]
+
+[tool.poetry.dependencies]
+python = ">=3.8,<4.0"
+numpy = "^1.24.2"
+matplotlib = "^3.7.1"
+simpleitk = "^2.2.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
