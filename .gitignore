@@ -529,5 +529,8 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 
+# nnU-Net package
+**/nnUNet/
+
 # End of https://www.toptal.com/developers/gitignore/api/python
 n
