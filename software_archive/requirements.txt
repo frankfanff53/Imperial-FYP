@@ -32,7 +32,6 @@ mpmath==1.2.1
 munkres==1.1.4
 networkx==2.8.4
 nibabel==5.1.0
-nnunetv2==2.1
 numexpr==2.8.4
 numpy==1.23.5
 packaging==23.0
