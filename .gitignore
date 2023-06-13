@@ -534,6 +534,7 @@ pyrightconfig.json
 
 # data
 **/data/*
+**/structured_crohns/*
 
 # zippped file 
 *.zip
