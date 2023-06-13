@@ -3,6 +3,7 @@ import os
 import shutil
 from pathlib import Path
 
+import numpy as np
 from batchgenerators.utilities.file_and_folder_operations import maybe_mkdir_p, subdirs
 from nnunetv2.dataset_conversion.Dataset137_BraTS21 import (
     copy_BraTS_segmentation_and_convert_labels_to_nnUNet,
@@ -38,6 +39,13 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
+        "--dataset-size",
+        type=int,
+        required=True,
+        help="Size of the dataset.",
+    )
+
+    parser.add_argument(
         "--task-id",
         type=int,
         required=True,
@@ -68,7 +76,10 @@ if __name__ == "__main__":
     maybe_mkdir_p(labels_dir)
 
     # Get the directories containing the cases of the dataset.
-    case_dirs = subdirs(input_dataset_dir, join=False)
+    case_dirs = np.array(subdirs(input_dataset_dir, join=False))
+    shuffle_index = np.random.permutation(len(case_dirs))
+    case_dirs = case_dirs[shuffle_index][:args.dataset_size]
+    print(f"Number of cases: {len(case_dirs)}")
 
     # Copy the images and labels to the output directory.
     for case_dir_id in tqdm(case_dirs, desc="Converting dataset"):
@@ -95,21 +106,23 @@ if __name__ == "__main__":
                 in_file=segmentation_file,
                 out_file=labels_dir / converted_segmentation_file_name
             )
+        else:
+            print(f"Segmentation file {segmentation_file} does not exist!")
 
-    # Create the dataset json file.
-    generate_dataset_json(
-        output_folder=converted_dataset_dir,
-        channel_names={encoding: modality for modality, encoding in MODALITY_ENCODINGS.items()},
-        labels={
-            "background": 0,
-            "whole tumor": (1, 2, 3),
-            "tumor core": (2, 3),
-            "enhancing tumor": (3,),
-        },
-        num_training_cases=len(case_dirs),
-        file_ending=".nii.gz",
-        regions_class_order=(1, 2, 3),
-        license="see https://www.synapse.org/#!Synapse:syn25829067/wiki/610863",
-        reference="see https://www.synapse.org/#!Synapse:syn25829067/wiki/610863",
-        dataset_release_date="1.0",
-    )
+    # # Create the dataset json file.
+    # generate_dataset_json(
+    #     output_folder=converted_dataset_dir,
+    #     channel_names={encoding: modality for modality, encoding in MODALITY_ENCODINGS.items()},
+    #     labels={
+    #         "background": 0,
+    #         "whole tumor": (1, 2, 3),
+    #         "tumor core": (2, 3),
+    #         "enhancing tumor": (3,),
+    #     },
+    #     num_training_cases=len(case_dirs),
+    #     file_ending=".nii.gz",
+    #     regions_class_order=(1, 2, 3),
+    #     license="see https://www.synapse.org/#!Synapse:syn25829067/wiki/610863",
+    #     reference="see https://www.synapse.org/#!Synapse:syn25829067/wiki/610863",
+    #     dataset_release_date="1.0",
+    # )

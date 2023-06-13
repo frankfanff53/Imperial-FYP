@@ -31,9 +31,9 @@ if __name__ == "__main__":
     # set up environment variables
     os.environ["nnUNet_raw"] = str(nnuNet_raw_path)
     os.environ["nnUNet_preprocessed"] = str(nnuNet_preprocessed_path)
-    os.environ["RESULTS_FOLDER"] = str(nnuNet_results_path)
+    os.environ["nnUNet_results"] = str(nnuNet_results_path)
 
     # validate environment variables
     print("nnUNet_raw: ", os.environ["nnUNet_raw"])
     print("nnUNet_preprocessed: ", os.environ["nnUNet_preprocessed"])
-    print("RESULTS_FOLDER: ", os.environ["RESULTS_FOLDER"])
+    print("nnUNet_results: ", os.environ["nnUNet_results"])
