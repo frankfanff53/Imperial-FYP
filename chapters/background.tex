@@ -22,7 +22,7 @@ The word "semantic" means we always assign a word label (a \textbf{semantic mean
         \caption{Segmentation based on clustering}
         \label{fig:normal-segmentation}
     \end{subfigure}
-       \caption{Different Image Segmentation Tasks \cite{segmentation-mli}}
+       \caption{Different Image Segmentation Tasks}
        \label{fig:segmentations}
 \end{figure}
 \noindent After getting a glance at \textbf{Semantic Segmentation}, we will discuss the methods for segmentation tasks in the following sections.
@@ -52,7 +52,7 @@ U-Net \cite{ronneberger2015u} is a deep learning method for image segmentation. 
     \centering
     \includegraphics[width=0.8\textwidth]{./figures/unet.png}
     \caption{An example of the U-net architecture. Each blue
-    box in the figure represents a multi-channel feature map, and on the top of each box indicates the number of channels. The \(x\)-\(y\)-size is shown at the lower left edge of the box. Each white box represents a copied feature maps. The arrows denote the different operations. \cite{ronneberger2015u}}
+    box in the figure represents a multi-channel feature map, and on the top of each box indicates the number of channels. The \(x\)-\(y\)-size is shown at the lower left edge of the box. Each white box represents a copied feature maps. The arrows denote the different operations.}
     \label{fig:unet}
 \end{figure}
 \noindent In the contracting path of the network (on the left), the network consists of a series of repeated applications. Each step starts with two 3x3 convolutions, and each convolution doubles the number of feature maps. Then the network applies a rectified linear unit (ReLU) as activation, followed by a downsampling step via a 2x2 max pooling operation with a stride of 2. \medskip
@@ -67,8 +67,8 @@ U-Net \cite{ronneberger2015u} is a deep learning method for image segmentation. 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{./figures/nnunet.png}
-    \caption{The pipeline representation of nn-UNet. \cite{nnu-net-medium}}
+    \includegraphics[width=\textwidth]{./figures/nnunet.png}
+    \caption{The pipeline representation of nn-UNet.}
     \label{fig:hello}
 \end{figure}
 \noindent The nnU-Net has achieved the state-of-the-art performance on a variety of medical imaging tasks, including brain tumour segmentation, prostate segmentation, and liver segmentation \cite{isensee2019nnu}. \medskip
