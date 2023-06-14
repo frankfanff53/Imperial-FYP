@@ -1,13 +1,13 @@
-% What are the typical methods for image segmentation?
-\section{Image Segmentation}
-When we talk about "Image Segmentation", what exactly are we talking about? Suppose we have a picture of two birds; the segmentation task, or more precisely the \textbf{"semantic segmentation"} task, is to separate the whole image into different regions with different colour codes, where the regions represent the exact position of birds covered on the image and the background. 
-\subsection{More on Semantic Segmentation}
-The word "semantic" means we always assign a word label (a \textbf{semantic meaning}) to the segmented region, representing what this region refers to. For example, for the example we mentioned above, the regions we segmented for the bird will be assigned with the label "bird", and the background region will be labelled as "background".
+\section{Delving into Image Segmentation}
 
-\begin{note}
-    Semantic segmentation is different from the tasks based on "pure" clustering of images to coherent regions. The regions we are looking to have their value or semantic meaning from the task we defined.
-\end{note}
-\begin{figure}[H]
+Image Segmentation is a fundamental concept in the realm of computer vision, which demonstrates how machines perceive and understand image data. But what exactly does the term “Image Segmentation” encapsulate? To explain this, let's take an illustrative example. Imagine a picture featuring two birds. The task of image segmentation, or more specifically, \textbf{“semantic segmentation”}, involves dissecting the entire image into distinct regions that are assigned different colour codes. These regions delineate the exact position of the birds within the image, effectively separating them from the background.
+
+\subsection{Expanding on Semantic Segmentation}
+
+Semantic segmentation transcends the act of partitioning an image into various regions. It assigns each segmented region with a label, i.e. a \textbf{semantic meaning}, indicating what the region denotes. An illustrative example is provided in \autoref{fig:semantic-segmentation}, where the red region denotes the liver in a medical imaging scan. Returning to our bird image, we would assign these regions the label “bird” upon segmenting the regions corresponding to the birds. Similarly, the rest of the image, or the background region, would be labelled as “background”.
+
+One worth mentioning is that semantic segmentation distinguishes itself from other tasks that merely cluster images into coherent regions, as shown in \autoref{fig:segmentations} \cite{segmentation-mli}. The regions identified through semantic segmentation carry a specific value or meaning inherently linked to the task at hand. Simply put, not just `where' but `what' is just as crucial in semantic segmentation.
+\begin{figure}[htp]
     \centering
     \begin{subfigure}[b]{0.47\textwidth}
         \centering
@@ -25,53 +25,126 @@ The word "semantic" means we always assign a word label (a \textbf{semantic mean
        \caption{Different Image Segmentation Tasks}
        \label{fig:segmentations}
 \end{figure}
-\noindent After getting a glance at \textbf{Semantic Segmentation}, we will discuss the methods for segmentation tasks in the following sections.
+Having laid out an overview of \textbf{Semantic Segmentation}, we will delve deeper into the distinctive methodologies utilised for segmentation tasks in the ensuing sections. This preliminary understanding provides a critical foundation for the exploration of more complex segmentation strategies and their applications in tasks such as diagnosing diseases or enhancing medical imaging methods.
+
 \section{Manual Segmentation}
+\label{sec:manual-segmentation}
 
-Manual Segmentation must be the most straightforward method we can come up to our mind. It refers to a process that lets human experts as an observer make gold standard labels based on their background knowledge. It is clear to see that the segmented labels are confirmed to be validated. However, it might take a long time for human observers to create such labels due to the time cost of training and the amount of data required to be labelled. \medskip
+Manual Segmentation, while basic, forms a cornerstone in the realm of image segmentation. In the context of our project, it involves utilising the specialised knowledge of medical experts to meticulously create `gold standard' labels for MRI data. This process is not simply a cursory glance at the image; it requires careful slice-by-slice examination of the MRI data, highlighting the diseased from the healthy tissues. This level of detailed inspection ensures that such manual segmentation results in validated and trustworthy classifications.
 
-\noindent Furthermore, inter or intra-observer variability may bring a concern to the validity of the labelled data by manual segmentation since there might be disagreement between different human observers and/or disagreement from one observer but on different occasions. Also, the bias from human experts might cause problems. We still need the assistance of computers to utilise intelligence for performing the segmentation task. 
+However, manual segmentation does bring to light significant challenges. Notably, the time-intensive nature of this process becomes increasingly pronounced when dealing with large datasets. This situation is further compounded in scenarios requiring slice-by-slice analysis of MRI data. The resultant effect is that manual segmentation can be exceptionally time-consuming, limiting the volume of data that can be labelled within an acceptable timeframe.
+
+This leads us to confront an ever-present challenge: the scarcity of gold standard labelled data. The considerable investment of time and skilled resources required for manual segmentation naturally restricts the availability of such high-quality, expert-classified data sets. As we journey towards leveraging machine learning methodologies in the realm of medical imaging, this scarcity of gold-standard, manually segmented data surfaces as a substantial hurdle to overcome. Thus, innovative solutions are required to address this gap and enhance the effectiveness and efficiency of image segmentation processes.
+
+Additionally, manual segmentation may introduce variability. This includes both inter-observer variability, where there could be disagreement between different human observers, and intra-observer variability, where inconsistencies could arise from the same observer at different occasions. This variability might potentially compromise the validity of the manually segmented data.
+
+The process of manual segmentation may also unintentionally incorporate biases from human experts, which could potentially distort the results. The limitations inherent in manual approaches underscore the necessity for the integration of computational tools to bolster the segmentation process. By leveraging computer-assisted methodologies, we can introduce an intelligent strategy to carry out segmentation tasks. This approach not only enhances efficiency but also promotes consistency, thereby effectively minimising human error and variability. As a consequence, we can significantly enhance the overall reliability and accuracy of MRI data analysis. This confluence of human expertise and computational intelligence stands to advance the field of medical imaging analysis.
 
 \section{Threshold-based Methods}
 
-Thresholding is one of the simplest and most popular segmentation techniques used in the industry. This method is based on the assumption that intensity distribution has multiple modes. That is to say, the grayscaled intensity of the pixels can be divided into two (or more) clusters, and we can pick thresholds from the "gaps" between the clusters to segment the background and foreground. The segmentation can be achieved by setting the pixels with an intensity lower than the threshold background and those with an intensity equal to or greater than the threshold foreground. It is also accepted to select multiple thresholds to select pixels within a specific range only for segmentation. \medskip
+Thresholding is among the most rudimentary yet widely adopted methods for image segmentation in various industry applications. The premise of this technique rests on the hypothesis that the distribution of pixel intensity in an image contains multiple modes. In other words, the grayscale intensity of pixels can be differentiated into two (or more) distinct clusters. The strategy involves identifying thresholds within the `gaps' separating these clusters to delineate the background from the foreground. For accomplishing this segmentation, pixels exhibiting an intensity lower than the threshold are designated as background, whilst those with equal to or higher than the threshold are identified as foreground. Furthermore, it is also feasible to define multiple thresholds, thereby enabling multi-class segmentation of pixels that fall within a specific intensity range only.
 
-\noindent The algorithm is simple and fast, yet the algorithm can only be applied when regions (of interest) are homogeneous and distinct. That is to say, the pixels in the same region should have similar intensity values. Also, finding consistent threshold frequencies across different images is different, since the intensity of pixels will vary from image to image.
+The inherent simplicity and speed of this algorithm is undeniably advantageous. However, its applicability is contingent on the homogeneity and distinctness of the regions of interest (ROIs), implying that pixels within the same region should exhibit similar intensity values. An additional challenge lies in identifying consistent threshold values across different images. This is due to the fact that pixel intensities are prone to variations between different images, thus introducing a degree of complexity in maintaining uniform thresholding norms across disparate datasets.
+
 \section{Region-based Methods}
-The region-growing method is a typical region-based method. The algorithm is based on the assumption that the segmented regions are homogeneous. The algorithm starts with a seed pixel, and then it will grow the region by adding pixels similar to the seed pixel. The algorithm will stop when the region reaches a specific size or when the region is homogeneous, where interpreted as the neighbouring pixels are too dissimilar with each other in comparison \cite{adams1994seeded}. \medskip
+Region-based segmentation techniques, with the region-growing method standing as a prominent example, offer an alternative approach to image segmentation. This method hinges on the premise of homogeneity within the segmented regions. The algorithm initiates with a seed pixel and then expands the region by successively incorporating pixels similar to the initial seed. The process continues until the region growth reaches a pre-defined size or once the region achieves homogeneity - interpreted as the point when neighbouring pixels become significantly dissimilar \cite{adams1994seeded}.
 
-\noindent Applying the region-growing method is usually very efficient, yielding a connected region from the seed point. Unlike thresholding, region-growing methods achieve segmentation without the explicit use of image properties. However, the region-growing method is not robust to noise since the algorithm will keep growing the region even if the neighbouring pixels are not similar to the seed pixel. \medskip
+Utilisation of the region-growing method often proves efficient, generating a connected region starting from the seed point. Unlike thresholding methods that rely on explicit image properties, region-growing methods facilitate segmentation based on pixel similarity. However, this method exhibits sensitivity to noise, as the algorithm may persist in growing the region even if the neighbouring pixels significantly deviate from the seed pixel's properties.
 
-\noindent Another major issue that the region-growing method has is that the initial seed point selection is significant. If the seed point is not selected correctly, the algorithm will not be able to grow the region properly. Consequently, this initial step is time-consuming and inaccurate to find the optimal seed point, and it also requires human intervention to evaluate the choice of seed point. \medskip
+Another key challenge when employing the region-growing method is the critical significance of the initial seed point selection. An incorrect choice of the seed point could thwart proper region growth. This initial phase often becomes time-consuming and lacks accuracy when seeking the optimal seed point. Furthermore, it necessitates human intervention for evaluating the appropriateness of the chosen seed point.
 
-\noindent To address this problem in medical imaging, Poonguzhali et al. proposed an automatic region growing method for ultrasound images \cite{poonguzhali2006complete}. They adopt an automatic seed point selection based on textural features such as co-occurrence features and run length features without human intervention. The experimental results showed the feasibility and effectiveness of the proposed region-growing algorithm in selecting seed points and segmenting the ROI without manual intervention.\medskip
+To Address these concerns in the context of medical imaging, a study contucted by Poonguzhali et al. proposed an automated region-growing method tailored for ultrasound images \cite{poonguzhali2006complete}. Their approach introduces an automatic seed point selection mechanism predicated on textural features, such as co-occurrence and run-length features, thereby eliminating the need for manual intervention. The experimental results attested to the feasibility and efficacy of their proposed region-growing algorithm, showcasing its capacity to select seed points and segment the ROIs without requiring manual intervention.
 
 \section{Deep Learning Methods}
-U-Net \cite{ronneberger2015u} is a deep learning method for image segmentation. It is a fully convolutional network (FCN) \cite{long2015fully} that uses a contracting path to capture image context and a symmetric expanding path that enables a precise level of localization. The network is trained end-to-end from raw pixels to pixel-wise segmentation masks. The network architecture is shown in \autoref{fig:unet}. \medskip
-\begin{figure}[H]
+\subsection{U-Net: An Automated Deep Learning Method for Image Segmentation}
+
+U-Net \cite{ronneberger2015u} represents a transformative approach in the realm of deep learning methodologies for image segmentation, particularly aligned with our project's objectives. As an evolved variant of Fully Convolutional Networks (FCN) \cite{long2015fully}, U-Net integrates a high-level contextual extraction path with a symmetric localisation pathway. This unique arrangement both captures a broad context of the image and enables precise localisation. This is ideal for creating an automated pipeline for TI segmentations, and an essential requirement in our research. 
+
+The end-to-end learning facilitated by U-Net directly generates pixel-wise segmentation masks from raw pixels, creating a valuable asset for our project. The architecture of this robust network is illustrated in \autoref{fig:unet}.
+
+\begin{figure}[htp]
     \centering
-    \includegraphics[width=0.8\textwidth]{./figures/unet.png}
-    \caption{An example of the U-net architecture. Each blue
-    box in the figure represents a multi-channel feature map, and on the top of each box indicates the number of channels. The \(x\)-\(y\)-size is shown at the lower left edge of the box. Each white box represents a copied feature maps. The arrows denote the different operations.}
+    \includegraphics[width=\textwidth]{./figures/unet.png}
+    \caption{An example of the U-net architecture.}
     \label{fig:unet}
 \end{figure}
-\noindent In the contracting path of the network (on the left), the network consists of a series of repeated applications. Each step starts with two 3x3 convolutions, and each convolution doubles the number of feature maps. Then the network applies a rectified linear unit (ReLU) as activation, followed by a downsampling step via a 2x2 max pooling operation with a stride of 2. \medskip
 
-\noindent The expansive path (on the right) starts with an upsampling of the feature map followed by a 2x2 convolution, halving the number of feature channels. The feature maps are then concatenated with the corresponding crops of the contracting path. After that, two 3x3 convolutions are applied to the image, and a ReLU activation follows each convolution. The reason for cropping the convolution results from the contraction path is the loss of border pixels in every convolution. At the final layer, the network used a 1x1 convolution to map each 64-component feature vector to the desired number of classes. \medskip
+Significantly, U-net has also been developed to handle 3D data, which aligns perfectly with our scenario, where the MRI scans are inherently 3-dimensional images. Furthermore, each blue box in \autoref{fig:unet} encapsulates a multi-channel feature map. The number of channels is denoted at the top of each box, while the \(x\)-\(y\) dimensions are annotated at the lower left corner of the box. Meanwhile, the white boxes signify sets of copied feature maps, with arrows demonstrating varied operations.
 
-\noindent nnU-Net \cite{isensee2021nnu}, a framework based on U-Nets, is a self-configuring segmentation framework that can automates the configuration of the preprocessing, network architecture, training, and post-processing of a segmentation pipeline. The selected configuration is depending on the medical data used for training. The framework provides a fully automated segmentation workflow that can be trained and inferred on any medical dataset. \medskip
+On the contracting (left) side of the network, the design entails a series of recurrent steps. Each step initiates with two 3x3 convolutions, proceeding to double the number of feature maps. The result is then subjected to a Rectified Linear Unit (ReLU) activation function, followed by a downsampling operation using 2x2 max pooling with a stride of 2.
 
-\noindent For deterimining hyperparameters, nnu-Net uses "data-fingerprints" with heuristic rules to select the best hyperparameter configuration for a given dataset before processing the training data. The framework also uses data fingerprints to generate pipeline configurations including the inferred parameters (image resampling, normalisation, batch, and patch size), and the blueprint parameters (loss function, optimiser, architecture). \medskip
+The contracting path of the network (left) contains recurrent steps, each initiating with two 3x3 convolutions that effectively double the feature maps count. Subsequently, a Rectified Linear Unit (ReLU) activation function is applied, followed by a 2x2 max pooling downsampling operation with a stride of 2.
 
-\noindent Combined with pre-selected hyperparameters and the pipeline configurations, the pipeline generates network training for 2D, 3D full-resolution, and 3D-Cascade U-Nets \cite{isensee2018nnu}. The optimal performance (e.g. average dice coefficient) is obtained by ensemling the configurations of the three networks. After that the optimal configuration will be deployed and evaluated on test dataset. The pipeline architecture is shown below. \medskip
+On the expansive side (right) of the network, the process commences with an upsampling step. A 2x2 convolution follows, halving the feature channels, which are then concatenated with their corresponding features from the contracting pathway. To conclude, a pair of 3x3 convolutions are applied to the image, succeeded by ReLU activations. The final layer employs a 1x1 convolution that maps each 64-component feature vector to the desired classes.
 
-\begin{figure}[H]
+Overall, U-Net offers a comprehensive and highly effective tool for achieving granular image segmentation—a capability integral to the success of our research exploration.
+
+\subsection{nnU-Net: A Self-configuring Framework Aligned with Our Research Goals}
+The nnU-Net \cite{isensee2021nnu} offers a progressive step towards personalised segmentation techniques. As a framework built upon U-Nets, it embodies a self-configuring segmentation mechanism, which autonomously orchestrates the configuration of preprocessing, network architecture, training, and post-processing steps in a segmentation pipeline. Crucially, the configuration selected is not static but instead adapts to the specificities of the medical data used for training. 
+
+A standout feature of nnU-Net is its unique approach towards determining hyperparameters. The framework utilises “data-fingerprints” allied with heuristic rules to pinpoint the optimal hyperparameter configuration for a given dataset prior to processing the training data. This data fingerprint concept is further leveraged to generate pipeline configurations, encapsulating both inferred parameters (such as image resampling, normalisation, batch, and patch size) and blueprint parameters (such as loss function, optimiser, and network architecture).
+
+With these pre-selected hyperparameters and generated pipeline configurations, nnU-Net proceeds to facilitate network training for 2D, 3D full-resolution, and 3D-Cascade U-Nets \cite{isensee2018nnu}. The platform then select an ensemble of configurations from these three networks to achieve optimal performance (for instance, maximising the average dice coefficient). Once identified, this optimal configuration is subsequently deployed and evaluated on the test dataset.
+
+\begin{figure}[htp]
     \centering
     \includegraphics[width=\textwidth]{./figures/nnunet.png}
-    \caption{The pipeline representation of nn-UNet.}
-    \label{fig:hello}
+    \caption{The pipeline representation of nnU-Net.}
+    \label{fig:nnu-net}
 \end{figure}
-\noindent The nnU-Net has achieved the state-of-the-art performance on a variety of medical imaging tasks, including brain tumour segmentation, prostate segmentation, and liver segmentation \cite{isensee2019nnu}. \medskip
+
+Notably, nnU-Net has been shown to deliver state-of-the-art performance in various medical imaging tasks, including segmenting brain tumours, prostate tissues, and liver structures \cite{isensee2019nnu}.
+
+However, it is essential to understand that the `adaptive' nature of nnU-Net does not imply universal applicability. Once the framework is trained, it performs optimally when applied to new data similar to the training data. For instance, if nnU-Net is trained using abdominal MRI images for liver segmentation, it will yield the best performance in similar tasks involving abdominal MRI images.
+
+Therefore, while nnU-Net enables a highly adaptive and automated segmentation workflow, the utility of the trained model is maximised when deployed on tasks that closely resemble the context and content of the training data. In our specific case, we will train the nnU-net model with our specific type of 3D MRI scans for TI segmentation tasks to ensure optimal results. This approach ensures leveraging the full potential of nnU-Net's adaptive capabilities tailored to our research goals.
+
+As our research strives to establish an automated pipeline for TI segmentations on 3D MRI scans, the integration of the nnU-Net framework is poignantly relevant. With its inherent capacity to adapt to different datasets and consistently yield precise image segmentation, nnU-Net is excellently positioned to enhance the rigour and precision of our research endeavour.
+
+\section{Generating Weak Labels: A Strategic Response to Annotation Scarcity}
+
+Given the scaricity of gold standard annotations for segmentation tasks, as discussed in \autoref{sec:manual-segmentation}, it becomes imperative to identify effective strategies that can enhance our training outcomes. One potential approach is the use of weak labels or weakly-segmented masks derived from the data. By adopting such methods, we aim to extract critical image features that can contribute to the learning efficacy of our model, despite limited access to manually-annotated, gold standard data.
+
+\subsection{Harnessing Pretrained Models: The Segment Anything Model (SAM)}
+
+A notable unsupervised method we contemplate employing is the Simple Linear Iterative Clustering (SLIC) \cite{achanta2010slic}. This algorithm stands at the forefront of superpixel segmentation techniques, providing a powerful tool to cluster pixels within an image into compact and uniformly labelled regions, referred to as `superpixels'.
+
+The key strengths of SLIC are its simplicity, ease of implementation, and adaptability across diverse scenarios. These virtues enable SLIC to effectively handle boundary adherence issues while simultaneously reducing the computational burden associated with image segmentation tasks. Essentially, SLIC operates as a spatially constrained iterative k-means clustering method with a pre-determined superpixel size \(m\). Consequently, in the generated weak mask, each superpixel generated incorporates a cluster center and \(m\) pixels. The SLIC algorithm adapted from \cite{achanta2010slic} is illustrated in \autoref{alg:slic}:
+
+\begin{algorithm}[H]
+\caption{SLIC superpixel segmentation}\label{alg:slic}
+\begin{algorithmic}[1]
+\item Initialise cluster centers \(C_{k} = \left[l_{k}, a_{k}, b_{k}, x_{k}, y_{k}\right]^{\top}\) by sampling pixels at regular grid with grid intervel \(S\).
+\item Perturb cluster centers in a \(n \times n\) neighbourhood, to the loweset gradient position.
+\While{$E >$ threshold}
+    \For{each cluster center \(C_{k}\)}
+        \State {Assign the best matching pixels from a \(2S \times 2S\) square \newline
+        \hspace*{3em}neighbourhood around the cluster according to \newline 
+        \hspace*{3em}the distance measure \cite{achanta2010slic}.}
+    \EndFor
+    \State Compute new cluster centers and residual error \(E\).
+\EndWhile
+\item Enforce Connectivity.
+\end{algorithmic}
+\end{algorithm}
+
+Note the term "Perturb" in line 2 essentially means to re-assign the cluster center in a \(n \times  n\) neighbourhood, where the re-assigned center is the point has lowest gradient position compare to the original cluster. Additionally, the residual error \(E\) is defined as the \(L_{1}\) distance between previous centers and recomputed centers.
+
+By integrating SLIC as part of our weak label generation strategy, we aim to utilise these inherent benefits to enhance the robustness of our machine learning models, thereby bringing rich insights from our medical imaging data in the absence of extensive manually-curated annotations.
+
+\subsection{Harnessing Pretrained Models: The Segment Anything Model (SAM)}
+Emerging from the innovative approaches of Meta AI, the Segment Anything (SA) project presents a new paradigm for image segmentation. The cornerstone of this project is a pioneering model, known as SAM, which exhibits an impressive degree of adaptability and transferability. Specifically designed and trained to be promptable, SAM showcases remarkable capabilities in zero-shot transfer to new image distributions and tasks.
+
+This inherent agility of SAM instigates impressive zero-shot performance outcomes. Indeed, comparative analysis with prior fully supervised results reveals that SAM often delivers competitive, if not superior, performance metrics \cite{kirillov2023segany}.
+
+Extending this versatile approach to medical imaging, MedSAM offers compelling prospects. Derived from the parent SAM model, MedSAM has shown considerable promise in segmenting medical images. One study unearthed that SAM's functionality can be enhanced with manual prompts, such as points and boxes, indicating intended objects in medical images \cite{huang2023segment}. This enhancement strategy aligns perfectly with our proposed approach to initially employ SLIC for coarse segmentation, and subsequently refine the segmentation process by obtaining finer-grained weak masks from SAM.
+
+However, it's worth noting that whilst SAM exhibits remarkable performance with certain objects and modalities, it may fall short or even fail in other scenarios. This observation underscores the importance of particularising the model's utility in context-specific applications, a perspective central to our research objective on TI segmentations with 3D MRI scans. With its inspiring capabilities, SAM holds immense potential to enhance our quest for automated and precision-driven segmentation techniques, thereby bolstering our research outcomes.
+
+
+
+
+
 
 
 
