@@ -5,18 +5,12 @@ from pathlib import Path
 
 import numpy as np
 from batchgenerators.utilities.file_and_folder_operations import maybe_mkdir_p, subdirs
-from nnunetv2.dataset_conversion.Dataset137_BraTS21 import (
-    copy_BraTS_segmentation_and_convert_labels_to_nnUNet,
-)
 from nnunetv2.dataset_conversion.generate_dataset_json import generate_dataset_json
 from nnunetv2.paths import nnUNet_raw
 from tqdm import tqdm
 
 MODALITY_ENCODINGS = {
-    'T1': 0,
-    'T1ce': 1,
-    'T2': 2,
-    'Flair': 3,
+    'T2': 0,
 }
 
 if __name__ == "__main__":
@@ -41,7 +35,6 @@ if __name__ == "__main__":
     parser.add_argument(
         "--dataset-size",
         type=int,
-        required=True,
         help="Size of the dataset.",
     )
 
@@ -77,8 +70,9 @@ if __name__ == "__main__":
 
     # Get the directories containing the cases of the dataset.
     case_dirs = np.array(subdirs(input_dataset_dir, join=False))
-    shuffle_index = np.random.permutation(len(case_dirs))
-    case_dirs = case_dirs[shuffle_index][:args.dataset_size]
+    if args.dataset_size is not None:
+        shuffle_index = np.random.permutation(len(case_dirs))
+        case_dirs = case_dirs[shuffle_index][:args.dataset_size]
     print(f"Number of cases: {len(case_dirs)}")
 
     # Copy the images and labels to the output directory.
@@ -102,27 +96,26 @@ if __name__ == "__main__":
         converted_segmentation_file_name = f"{case_dir_id}.nii.gz"
         segmentation_file = input_case_dir / segmentation_file_name
         if segmentation_file.exists():
-            copy_BraTS_segmentation_and_convert_labels_to_nnUNet(
-                in_file=segmentation_file,
-                out_file=labels_dir / converted_segmentation_file_name
+            shutil.copy(
+                segmentation_file,
+                labels_dir / converted_segmentation_file_name
             )
         else:
             print(f"Segmentation file {segmentation_file} does not exist!")
 
-    # Create the dataset json file.
-    generate_dataset_json(
-        output_folder=converted_dataset_dir,
-        channel_names={encoding: modality for modality, encoding in MODALITY_ENCODINGS.items()},
-        labels={
-            "background": 0,
-            "whole tumor": (1, 2, 3),
-            "tumor core": (2, 3),
-            "enhancing tumor": 3,
-        },
-        num_training_cases=len(case_dirs),
-        file_ending=".nii.gz",
-        regions_class_order=(1, 2, 3),
-        license="see https://www.synapse.org/#!Synapse:syn25829067/wiki/610863",
-        reference="see https://www.synapse.org/#!Synapse:syn25829067/wiki/610863",
-        dataset_release_date="1.0",
-    )
+    if args.dataset_type == "train":
+        # Create the dataset json file.
+        generate_dataset_json(
+            output_folder=converted_dataset_dir,
+            channel_names={encoding: modality for modality, encoding in MODALITY_ENCODINGS.items()},
+            labels={
+                "background": 0,
+                "terminal ileum": 1,
+            },
+            num_training_cases=len(case_dirs),
+            file_ending=".nii.gz",
+            regions_class_order=(1,),
+            license="see https://www.synapse.org/#!Synapse:syn25829067/wiki/610863",
+            reference="see https://www.synapse.org/#!Synapse:syn25829067/wiki/610863",
+            dataset_release_date="1.0",
+        )
