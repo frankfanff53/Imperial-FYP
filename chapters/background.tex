@@ -58,7 +58,7 @@ To Address these concerns in the context of medical imaging, a study contucted b
 \section{Deep Learning Methods}
 \subsection{U-Net: An Automated Deep Learning Method for Image Segmentation}
 
-U-Net \cite{ronneberger2015u} represents a transformative approach in the realm of deep learning methodologies for image segmentation, particularly aligned with our project's objectives. As an evolved variant of Fully Convolutional Networks (FCN) \cite{long2015fully}, U-Net integrates a high-level contextual extraction path with a symmetric localisation pathway. This unique arrangement both captures a broad context of the image and enables precise localisation. This is ideal for creating an automated pipeline for TI segmentations, and an essential requirement in our research. 
+U-Net \cite{ronneberger2015u} represents a transformative approach in the realm of deep learning methodologies for image segmentation, particularly aligned with our project's objectives. As an evolved variant of Fully Convolutional Networks (FCN) \cite{long2015fully}, U-Net integrates a high-level contextual extraction path with a symmetric localisation pathway. This unique arrangement both captures a broad context of the image and enables precise localisation. This is ideal for creating an automated pipeline for T.I. segmentations, and an essential requirement in our research. 
 
 The end-to-end learning facilitated by U-Net directly generates pixel-wise segmentation masks from raw pixels, creating a valuable asset for our project. The architecture of this robust network is illustrated in \autoref{fig:unet}.
 
@@ -97,15 +97,15 @@ Notably, nnU-Net has been shown to deliver state-of-the-art performance in vario
 
 However, it is essential to understand that the `adaptive' nature of nnU-Net does not imply universal applicability. Once the framework is trained, it performs optimally when applied to new data similar to the training data. For instance, if nnU-Net is trained using abdominal MRI images for liver segmentation, it will yield the best performance in similar tasks involving abdominal MRI images.
 
-Therefore, while nnU-Net enables a highly adaptive and automated segmentation workflow, the utility of the trained model is maximised when deployed on tasks that closely resemble the context and content of the training data. In our specific case, we will train the nnU-net model with our specific type of 3D MRI scans for TI segmentation tasks to ensure optimal results. This approach ensures leveraging the full potential of nnU-Net's adaptive capabilities tailored to our research goals.
+Therefore, while nnU-Net enables a highly adaptive and automated segmentation workflow, the utility of the trained model is maximised when deployed on tasks that closely resemble the context and content of the training data. In our specific case, we will train the nnU-net model with our specific type of 3D MRI scans for T.I. segmentation tasks to ensure optimal results. This approach ensures leveraging the full potential of nnU-Net's adaptive capabilities tailored to our research goals.
 
-As our research strives to establish an automated pipeline for TI segmentations on 3D MRI scans, the integration of the nnU-Net framework is poignantly relevant. With its inherent capacity to adapt to different datasets and consistently yield precise image segmentation, nnU-Net is excellently positioned to enhance the rigour and precision of our research endeavour.
+As our research strives to establish an automated pipeline for T.I. segmentations on 3D MRI scans, the integration of the nnU-Net framework is poignantly relevant. With its inherent capacity to adapt to different datasets and consistently yield precise image segmentation, nnU-Net is excellently positioned to enhance the rigour and precision of our research endeavour.
 
 \section{Generating Weak Labels: A Strategic Response to Annotation Scarcity}
 
 Given the scaricity of gold standard annotations for segmentation tasks, as discussed in \autoref{sec:manual-segmentation}, it becomes imperative to identify effective strategies that can enhance our training outcomes. One potential approach is the use of weak labels or weakly-segmented masks derived from the data. By adopting such methods, we aim to extract critical image features that can contribute to the learning efficacy of our model, despite limited access to manually-annotated, gold standard data.
 
-\subsection{Harnessing Pretrained Models: The Segment Anything Model (SAM)}
+\subsection{Leveraging Unsupervised Methods: Simple Linear Iterative Clustering (SLIC)}
 
 A notable unsupervised method we contemplate employing is the Simple Linear Iterative Clustering (SLIC) \cite{achanta2010slic}. This algorithm stands at the forefront of superpixel segmentation techniques, providing a powerful tool to cluster pixels within an image into compact and uniformly labelled regions, referred to as `superpixels'.
 
@@ -139,7 +139,7 @@ This inherent agility of SAM instigates impressive zero-shot performance outcome
 
 Extending this versatile approach to medical imaging, MedSAM offers compelling prospects. Derived from the parent SAM model, MedSAM has shown considerable promise in segmenting medical images. One study unearthed that SAM's functionality can be enhanced with manual prompts, such as points and boxes, indicating intended objects in medical images \cite{huang2023segment}. This enhancement strategy aligns perfectly with our proposed approach to initially employ SLIC for coarse segmentation, and subsequently refine the segmentation process by obtaining finer-grained weak masks from SAM.
 
-However, it's worth noting that whilst SAM exhibits remarkable performance with certain objects and modalities, it may fall short or even fail in other scenarios. This observation underscores the importance of particularising the model's utility in context-specific applications, a perspective central to our research objective on TI segmentations with 3D MRI scans. With its inspiring capabilities, SAM holds immense potential to enhance our quest for automated and precision-driven segmentation techniques, thereby bolstering our research outcomes.
+However, it's worth noting that whilst SAM exhibits remarkable performance with certain objects and modalities, it may fall short or even fail in other scenarios. This observation underscores the importance of particularising the model's utility in context-specific applications, a perspective central to our research objective on T.I. segmentations with 3D MRI scans. With its inspiring capabilities, SAM holds immense potential to enhance our quest for automated and precision-driven segmentation techniques, thereby bolstering our research outcomes.
 
 
 

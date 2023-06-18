@@ -1,0 +1,11 @@
+\section{Evaluation Plan}
+To ensure the successful delivery of our project objectives, we've designed a rigorous evaluation plan that comprehensively assesses performance at each critical stage. The following areas represent our focus points:
+
+\begin{enumerate}
+    \item \textbf{Baseline Model Evaluation}: Upon the establishment of our nnU-Net-based baseline segmentation model, we will conduct a thorough evaluation. This segment utilises the Simple Linear Iterative Clustering (SLIC) method to generate coarse-grained weak masks and is based on transfer learning. We will assess the model's initial performance, focusing predominantly on the Dice Similarity Coefficient (DSC).
+    \item \textbf{Evaluation of Refined Masks}: Following the generation of coarse-grained weak masks, we integrate the Segment Anything Model (SAM) or MedSAM to create refined, finer-grained masks. We will evaluate these refined masks' quality and effectiveness, comparing them to the coarse-grained masks created using SLIC.
+    \item \textbf{Proxy Learning Performance Analysis}: Utilising the refined weak masks, we perform proxy learning and assess its efficacy. We will evaluate the improvements in training stability, learning rate, convergence speed, and DSC scores achieved with the refined masks during this process.
+    \item \textbf{Fine-tuning and Target Model Evaluation}: With both fully annotated data and refined weak masks, we fine-tune our model and develop the target segmentation model. We will measure parameters such as DSC, training efficiency, and generalisation gap to compare the performance improvements over the initial baseline model.
+    \item \textbf{Overall Performance Evaluation}: Upon the completion of each stage, we will perform a comprehensive evaluation, quantitatively assessing the performance of the developed models and qualitatively analysing their segmentation results. This final evaluation serves to confirm if our approaches have brought about significant advancements in terminal ileum segmentation.
+\end{enumerate}
+By adhering to this robust evaluation plan, we anticipate validating the success of our project through a systematic assessment, thereby ensuring our endeavours contribute effectively to advancements in terminal ileum segmentation.
