@@ -109,4 +109,32 @@ The `3d_lowres` will be sometimes omitted due to the small image size in the pro
 
 ### Training
 
-TBC
+Please enter the following code for training:
+
+```bash
+nnUNetv2_train DATASET_NAME_OR_ID UNET_CONFIGURATION FOLD -device DEVICE --npz
+```
+
+For instance, currently we have *Datset001_BraTS2020* as the `DATASET_NAME`, the **1** as the `DATASET_ID`, and the `UNET_CONFIGURATION` is **2d**. In default the nnUNet is performing a 5-fold cross validation. The `--npz` flag is used for finding the best con figuration for the current configuration. Suppose you want to leave the fold 0 as the validation set, you can type:
+
+```bash
+nnUNetv2_train Dataset001_BraTS2020 2d 0 -device cuda --npz
+```
+
+### Find best configuration
+
+```bash
+nnUNetv2_find_best_configuration Dataset001_BraTS2020 -c 2d -tr nnUNetTrainer_1epoch
+```
+
+### Inference
+
+```bash
+nnUNetv2_predict -d Dataset001_BraTS2020 -i .\data\nnUNet_raw\Dataset001_BraTS2020\imagesTs\ -o .\data\unseen_pred\Dataset001_BraTS2020\ -f  0 1 2 3 4 -tr nnUNetTrainer_1epoch -c 2d -p nnUNetPlans
+```
+
+### Postprocessing
+
+```bash
+nnUNetv2_apply_postprocessing -i .\data\unseen_pred\Dataset001_BraTS2020_2d\ -o .\data\unseen_postprocessing\Dataset001_BraTS2020_2d\ -pp_pkl_file D:\Frank\Imperial-FYP\software_archive\data\nnUNet_results\Dataset001_BraTS2020\nnUNetTrainer_1epoch__nnUNetPlans__2d\crossval_results_folds_0_1_2_3_4\postprocessing.pkl -np 8 -plans_json D:\Frank\Imperial-FYP\software_archive\data\nnUNet_results\Dataset001_BraTS2020\nnUNetTrainer_1epoch__nnUNetPlans__2d\crossval_results_folds_0_1_2_3_4\plans.json
+```
