@@ -4,8 +4,10 @@ import shutil
 from pathlib import Path
 
 import numpy as np
-from batchgenerators.utilities.file_and_folder_operations import maybe_mkdir_p, subdirs
-from nnunetv2.dataset_conversion.generate_dataset_json import generate_dataset_json
+from batchgenerators.utilities.file_and_folder_operations import (
+    maybe_mkdir_p, subdirs)
+from nnunetv2.dataset_conversion.generate_dataset_json import \
+    generate_dataset_json
 from nnunetv2.paths import nnUNet_raw
 from tqdm import tqdm
 
@@ -103,25 +105,6 @@ if __name__ == "__main__":
         else:
             print(f"Segmentation file {segmentation_file} does not exist!")
 
-<<<<<<< HEAD
-    # # Create the dataset json file.
-    # generate_dataset_json(
-    #     output_folder=converted_dataset_dir,
-    #     channel_names={encoding: modality for modality, encoding in MODALITY_ENCODINGS.items()},
-    #     labels={
-    #         "background": 0,
-    #         "whole tumor": (1, 2, 3),
-    #         "tumor core": (2, 3),
-    #         "enhancing tumor": (3,),
-    #     },
-    #     num_training_cases=len(case_dirs),
-    #     file_ending=".nii.gz",
-    #     regions_class_order=(1, 2, 3),
-    #     license="see https://www.synapse.org/#!Synapse:syn25829067/wiki/610863",
-    #     reference="see https://www.synapse.org/#!Synapse:syn25829067/wiki/610863",
-    #     dataset_release_date="1.0",
-    # )
-=======
     if args.dataset_type == "train":
         # Create the dataset json file.
         generate_dataset_json(
@@ -138,4 +121,3 @@ if __name__ == "__main__":
             reference="see https://www.synapse.org/#!Synapse:syn25829067/wiki/610863",
             dataset_release_date="1.0",
         )
->>>>>>> 2e40b7d (update dataset conversion and README.)
