@@ -1,0 +1,56 @@
+This chapter is dedicated to the exposition and analysis of our experimental results. We shall commence by showcasing the performance of our model, meticulously comparing it against the baseline model derived from preceding work. The comparison will span across two crucial stages - the generation of weak labels and the ultimate segmentation performance.
+
+Beyond the comparative assessment, we thrust into the realm of statistical validation using the t-test. This step solidifies our evidence by testing the hypothesis concerning the improvement observed in our results.
+
+Through this dual approach, with a comparative study augmented by rigorous statistical validation, we aim to furnish a comprehensive demonstration of capabilities and advancements of our model over existing methods. Collectively, these analyses form the backbone of our arguments, underpinning the significant contribution of our work in advancing the state-of-the-art in segmentation tasks.
+
+\section{Weak Label generation}
+
+Weak label generation is an essential part of our training pipeline. We utilise the centerline coordinates to generate a weak mask, followed by trained on limited fully-connected data to enhace the model performance. It is clear that the quality of weak label determines the final performance of the segmentation model. Here are the results:
+
+\begin{table}[h]
+    \begin{subtable}[b]{\textwidth}
+        \centering
+        \begin{tabular}{c | c | c}
+        Model & Average DSC (Axial) & Average DSC (Coronal) \\
+        \hline
+        Baseline & \(0.5872 \pm 0.0910\)  & \(0.5621 \pm 0.0688\)\\
+        \hline
+        Our Method & a & b 
+       \end{tabular}
+       \caption{Average case Comparison}
+       \label{tab:week1}
+    \end{subtable}
+    \vfill
+    \begin{subtable}[b]{\textwidth}
+        \centering
+        \begin{tabular}{c | c | c}
+        Model & Best DSC (Axial) & Best DSC (Coronal) \\
+        \hline
+        Baseline & 0.6410 & 0.7006\\
+        \hline
+        Our Method & a & b 
+       \end{tabular}
+       \caption{Best case Comparison}
+       \label{tab:week2}
+    \end{subtable}
+     \caption{Max and min temps recorded in the first two weeks of July}
+     \label{tab:temps}
+\end{table}
+The result is our method beats the baseline, perform t test and the result is significant. Then we perform t-test to validate the significance.
+
+We can see there are significant differences between the baseline and our model, and both differences are significant. 
+
+\section{Segmentation Model}
+similar journey, with t-test
+
+\section{Comparison with Ground truth}
+
+\section{Significance}
+
+
+
+
+
+
+

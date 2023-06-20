@@ -1,3 +1,71 @@
+With the culmination of our model's training and inference phases, we now turn our attention towards its assessment. The heart of this chapter is to critically evaluate our model performance and authenticate its effectiveness against preceding works. Chapter \ref{cha:Methodology} thoroughly explained the foundations and implementation of our baseline model, leveraging the SLIC algorithm, centerline coordinates, and extracted ROI. Consequently, we will not have any further discussion on the baseline construction here. Instead, this chapter will concentrate on identifying and deploying effective evaluation methodologies and metrics. This allows us for a rigorous assessemnt of our model performance and the validity of its results, helping us understand the strengths and limitations of our model and suggesting potential directions for future improvement.
+
+\section{Evaluation metric}
+\subsection{Dice Similarity Coefficient (DSC)}
+
+The Dice Similarity Coefficient (DSC), also known as the Sørensen-Dice coefficient, serves as a robust metric for quantifying overlap. This statistic facilitates an understanding of how closely the predicted segmentation aligns with the ground truth, playing a pivotal role in the assessment of image segmentation tasks.
+
+Suppose we have two sets \(X\) and \(Y\) representing our ground truth and predicted segmentations respectively. The DSC is defined as follows:
+\[
+\operatorname*{DSC} = \frac{2|X \cap Y|}{|X| + |Y|}
+\]
+This equation encapsulates the ratio of twice the intersection of \(X\) and \(Y\) to the total sizes of both sets. Nevertheless, if we expand on this definition, we can express the DSC in another form that highlights its relation to classification metrics. This can be done by abbreviating True Positive, False Positive, and False Negative predictions as TP, FP, and FN, respectively:
+\[
+\operatorname*{DSC} = \frac{2 \operatorname*{TP}}{2 \operatorname*{TP} + \operatorname*{FP} + \operatorname*{FN}} = F_{1}
+\]
+In this context, TP represents an agreement between our prediction \(Y\) and the ground truth \(X\), where both identify a positive label. FP and FN, on the other hand, correspond to discrepancies between \(Y\) and \(X\), which correspond to the areas where the classifier and ground truth disagree. This representation underlines the intimate relationship between DSC and classification metrics, demonstrating the capacity of the former to inform us about the precision and recall of our model, where both consider the significance of Ture Positives and penalises any False Positive predcitions. Thus its utility in image segmentation evaluation can be clearly seen.
+
+\subsection{Jeccard Similarity Coefficient}
+
+The Jaccard Similarity Coefficient is a well-established metric often associated with the DSC due to its role in evaluating the similarity and diversity of two sets. It quantifies the proportion of shared elements between the sets relative to their combined unique elements—essentially measuring the overlap against the total spread.
+
+Let us again consider two sets \(X\) and \(Y\), representing the ground truth and predicted segmentation masks respectively. The Jaccard Coefficient is defined as:
+\[
+\operatorname*{JSC} = \frac{|X \cap Y|}{|X\cup Y|} = \frac{\operatorname*{TP}}{\operatorname*{TP} + \operatorname*{FP} + \operatorname*{FN}}
+\]
+Further exploration allows us to rewrite the Jaccard Coefficient in the form:
+\begin{align*}
+    \operatorname*{JSC} &= \frac{|X \cap Y|}{|X| + |Y| - |X \cap Y|} \\
+    &= \frac{\frac{|X \cap Y|}{|X| + |Y|}}{1 - \frac{|X \cap Y|}{|X| + |Y|}} = \frac{\frac{1}{2}\operatorname*{DSC}}{1 - \frac{1}{2}\operatorname*{DSC}} \\
+    &= \frac{\operatorname*{DSC}}{2 - \operatorname*{DSC}}
+\end{align*}
+
+This computational equivalence solidifies the relationship between the Jaccard Coefficient and DSC, suggesting they both measure over a similar characteristic in the context of segmentation. Given this, they do not supply independent information useful for differential evaluation of model performance. Hence, in our methodology, we opt to utilize the DSC as the primary metric instead of Jaccard Coefficient to avoid redundancy.
+
+\subsection{Hausdorff Distance}
+
+Hausdorff Distance
+While the quantity of accurate predictions (True Positives) undoubtedly contributes to successful segmentation, it is equally critical to scrutinize the shape of the generated mask, particularly in applications like organ segmentation. The Hausdorff Distance offers a comprehensive measure for evaluating the morphological similarity between the boundaries or contours of a predicted mask and ground truth.
+
+Imagine two point sets \(A\) and \(B\) representing the contour coordinates. In this setting, the Hausdorff Distance manifests as:
+\[
+\operatorname*{HD} = \max \left(h\left(A, B\right), h\left(B, A\right)\right)
+\]
+where \(h(\cdot, \cdot)\) is defined as the directed Hausdorff distance, represented as
+\[
+h(A, B) = \max_{a \in A}\{ \min_{b \in B} d(a, b) \}
+\]
+Here, \(d\) signifies a defined distance metric - for instance, the Euclidean or Manhattan distance. This measure essentially quantifies the greatest of all the closest distances from a point in one set to the other set. The Hausdorff Distance consequently assesses the maximum discrepancy between the two contours, providing valuable insight into the precision of the segmentation boundaries. This robust metric thus serves as a decisive tool in evaluating our model performance on contour prediction accuracy.
+\section{Evaluation Method}
+\subsection{Employing Dice Similarity Coefficient for Qualitative Evaluation}
+The Dice Similarity Coefficient (DSC) is a standard for validating medical volume segmentations and measuring similarity across segmentation stages. We apply it consistently to our initial coarse weak masks, refined weak masks, and final performance, enabling tracking of our model's evolution over time.
+
+Furthermore, by aligning our metric with prior work in this field, we ensure that our results are directly comparable to earlier research. This facet not only bolsters the robustness of our findings but also situates our contributions within the broader scholarly discourse.
+
+Hence, although seemingly straightforward, the strategic use of DSC plays a pivotal role in validating the efficacy of our segmentation method and facilitating meaningful comparisons with established literature.
+\subsection{Utilizing the t-Test for Evaluating Statistical Significance}
+In the realm of assessing improvements in our segmentation outcomes and weak label generation, we leverage the capabilities of a statistical method known as the t-test. This test serves as a potent tool in distinguishing if the means of two groups, i.e. our baseline model performance and our proposed model performance, are statistically disparate from each other.
+
+We make the null hypothesis (H0) to suggest no significant difference between the means of these two groups. Coversely, the alternative hypothesis (H1) represents the situation where there exists a notable divergence in performance, indicative of an enhancement brought about by our new model.
+
+Upon conducting the t-test, which is carried out by comparing the means of these two distinct groups and subsequently calculating the p-value, we are guided by conventional standards to reject H0 and accept H1 if the p-value falls below the typical significance threshold of 0.05. Such an event signifies a statistically robust improvement in our proposed model over the baseline model.
+
+However, while the t-test validates the significance of the observed improvement, it abstains from quantifying the extent of this enhancement. To surmount this, we concurrently apply effect size metrics, such as Cohen's d, to capture the actual magnitude of the contrast between the performances of the two models.
+
+To summarize, the application of the t-test empowers us to conclusively attribute the witnessed improvements in our image segmentation results or weak-label generation not to random fluctuations, but to substantial enhancements intrinsic to our developed model.
+
+
+
 \section{Evaluation Plan}
 To ensure the successful delivery of our project objectives, we've designed a rigorous evaluation plan that comprehensively assesses performance at each critical stage. The following areas represent our focus points:
 
