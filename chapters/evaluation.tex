@@ -33,13 +33,11 @@ Further exploration allows us to rewrite the Jaccard Coefficient in the form:
 This computational equivalence solidifies the relationship between the Jaccard Coefficient and DSC, suggesting they both measure over a similar characteristic in the context of segmentation. Given this, they do not supply independent information useful for differential evaluation of model performance. Hence, in our methodology, we opt to utilize the DSC as the primary metric instead of Jaccard Coefficient to avoid redundancy.
 
 \subsection{Hausdorff Distance}
-
-Hausdorff Distance
 While the quantity of accurate predictions (True Positives) undoubtedly contributes to successful segmentation, it is equally critical to scrutinize the shape of the generated mask, particularly in applications like organ segmentation. The Hausdorff Distance offers a comprehensive measure for evaluating the morphological similarity between the boundaries or contours of a predicted mask and ground truth.
 
 Imagine two point sets \(A\) and \(B\) representing the contour coordinates. In this setting, the Hausdorff Distance manifests as:
 \[
-\operatorname*{HD} = \max \left(h\left(A, B\right), h\left(B, A\right)\right)
+\operatorname*{HD} = \max \left(h(A, B), h(B, A)\right)
 \]
 where \(h(\cdot, \cdot)\) is defined as the directed Hausdorff distance, represented as
 \[
@@ -60,11 +58,7 @@ We make the null hypothesis (H0) to suggest no significant difference between th
 
 Upon conducting the t-test, which is carried out by comparing the means of these two distinct groups and subsequently calculating the p-value, we are guided by conventional standards to reject H0 and accept H1 if the p-value falls below the typical significance threshold of 0.05. Such an event signifies a statistically robust improvement in our proposed model over the baseline model.
 
-However, while the t-test validates the significance of the observed improvement, it abstains from quantifying the extent of this enhancement. To surmount this, we concurrently apply effect size metrics, such as Cohen's d, to capture the actual magnitude of the contrast between the performances of the two models.
-
 To summarize, the application of the t-test empowers us to conclusively attribute the witnessed improvements in our image segmentation results or weak-label generation not to random fluctuations, but to substantial enhancements intrinsic to our developed model.
-
-
 
 \section{Evaluation Plan}
 A comprehensive evaluation plan has been conceived to ensure the fulfillment of our project objectives, meticulously assessing the performance at each pivotal milestone. The key components of our evaluation strategy involving the examination of the baseline model, refined masks, the fine-tuned model, and the execution of ablation studies are as follows:
