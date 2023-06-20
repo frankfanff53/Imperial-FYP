@@ -1,14 +1,14 @@
 \section{Conclusion}
 
-In this project, we presented our methodology, which leverages the strength of a refined weak label generation process, coupled with the capabilities of a pre-trained MedSAM model. The cornerstone of our approach lies in the fine-tuning of our model using comprehensive, fully annotated segmentation files. We subjected the resultant weak masks to a subsequent level of fine-tuning, thereby sculpting our target model.
+In this project, we presented our methodology, which leverages the strength of a refined weak label generation process, coupled with the capabilities of a pre-trained SAM model. The cornerstone of our approach lies in the fine-tuning of our model using comprehensive, fully annotated segmentation files. We subjected the resultant weak masks to a subsequent level of fine-tuning, thereby sculpting our target model.
 
-The effectiveness of our proposed method is reflected in the marked enhancement of the Dice Similarity Coefficient (DSC) values. With an improvement of 18.97\%, the DSC surged from 0.58 to a more favourable score of 0.69. This uplift signifies a substantial enhancement in the overlap between the predicted and actual segmentations, underscoring the efficacy of our technique in performing accurate segmentation tasks.
+The effectiveness of our proposed method is reflected in the marked enhancement of the Dice Similarity Coefficient (DSC) values. With an improvement of 29.53\% and 15.45\% across different modalities, the highest average DSC surged from 0.58 to a more favourable score of 0.73. This uplift signifies a substantial enhancement in the overlap between the predicted and actual segmentations, underscoring the efficacy of our technique in performing accurate segmentation tasks.
 
-Further consolidating the credibility of our results, we performed statistical validation. This process ensured that the observed improvements were not the result of random variations but were a consequence of the systematic enhancements integrated into our model.
+Further consolidating the credibility of our results, we performed graphical and statistical validation. This process ensured that the observed improvements were not the result of random variations but were a consequence of the systematic enhancements integrated into our model.
 
-Additionally, we embarked on rigorous ablation studies to expound the contribution of each step in our refined method. In the course of these explorations, the localisation of the terminal ileum (T.I.) within the bounding box emerged as a critical factor during the fine-tuning of the MedSAM model. The study reaffirmed the significance of maintaining attention to organ-specific regions for improved segmentation outcomes.
+Additionally, we embarked on rigorous ablation studies to expound the contribution of each step in our refined method. In the course of these explorations, the localisation of the terminal ileum (T.I.) within the bounding box emerged as a critical factor during the fine-tuning of the SAM model. The study reaffirmed the significance of maintaining attention to organ-specific regions for improved segmentation outcomes.
 
-In conclusion, our work advances the frontiers of medical image segmentation by proposing a refined method that amalgamates weak label generation with a pre-trained MedSAM model and strategic fine-tuning stages. Validated by substantial improvements and statistically confirmed results, our method establishes its potential for future applications in the domain of medical imaging and diagnostics.
+In conclusion, our work advances the frontiers of medical image segmentation by proposing a refined method that amalgamates weak label generation with a pre-trained SAM model and strategic fine-tuning stages. Validated by substantial improvements and statistically confirmed results, our method establishes its potential for future applications in the domain of medical imaging and diagnostics.
 
 \section{Future Work}
 
