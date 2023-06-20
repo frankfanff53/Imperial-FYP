@@ -1,0 +1,4 @@
+Average Dice coefficient: 0.4463
+Standard deviation: 0.0355
+Median: 0.4395
+Minimum: 0.4044

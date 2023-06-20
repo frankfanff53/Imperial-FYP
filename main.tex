@@ -1,54 +1,52 @@
-\documentclass[a4paper,12pt,twoside]{report}
+\documentclass[a4paper,11pt]{report}
 \input{preamble.tex}
 
 \newcommand{\supervisor}{Dr. Bernhard Kainz}
-\newcommand{\secondmarker}{Dr. Ben Glocker}
-\newcommand{\reporttype}{Individual Project Interim Report}
+\newcommand{\secondmarker}{Prof. Ben Glocker}
+\newcommand{\reporttype}{Individual Project Report}
 \newcommand{\degreetype}{MEng Mathematics and Computer Science}
 \begin{document}
-\title{Tackling Crohn's disease using deep learning}
+\title{Tackling Crohn's disease \\ using deep learning}
 \author{Feifan Fan}
 \input{chapters/title.tex}
 
-% \input{chapters/abstract.tex}
-% \input{chapters/acknoledgements.tex}
+\input{chapters/abstract.tex}
+\input{chapters/acknoledgements.tex}
 
 \tableofcontents
-% \listoffigures
+\listoffigures
 % \listoftables
 
 \chapter{Introduction}
-\label{cha:introduction}
 \input{chapters/introduction.tex}
 
-\chapter{Related Work}
-\input{chapters/related-work.tex}
 \chapter{Background}
 \label{cha:background}
 \input{chapters/background.tex}
 
-\chapter{Project Plan}
-\label{cha:project-plan}
-\input{chapters/interim/plan.tex}
+\chapter{Related Work}
+\input{chapters/related-work.tex}
 
-\chapter{Evaluation Plan} % (fold)
-\label{cha:evaluation-plan}
-\input{chapters/interim/evaluation.tex}
 \chapter{Ethical Discussion}
-\label{cha:ethical-discussion}
 \input{chapters/ethics.tex}
 
-% \chapter{Methodology}
-% \label{cha:Methodology}
-% \input{chapters/methodology.tex}
+\chapter{Dataset Analysis}
+\input{chapters/dataset.tex}
 
-% \chapter{Evaluation}
-% \label{cha:Evaluation}
-% \input{chapters/evaluation.tex}
+\chapter{Methodology}
+\label{cha:Methodology}
+\input{chapters/methodology.tex}
 
-% \chapter{Conclusion}
-% \label{cha:Conclusion}
-% \input{chapters/conclusion.tex}
+\chapter{Evaluation}
+\label{cha:evaluation}
+\input{chapters/evaluation.tex}
+
+\chapter{Results}
+\input{chapters/results.tex}
+
+\chapter{Conclusion and Future Work}
+\label{cha:Conclusion}
+\input{chapters/conclusion.tex}
 
 \bibliography{ref}
 \end{document}

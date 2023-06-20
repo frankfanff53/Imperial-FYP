@@ -535,11 +535,17 @@ pyrightconfig.json
 # data
 **/data/*
 **/structured_crohns/*
-**/*crohns/
-**/*crohns.zip
+**/*_crohns/
+**/*_crohns.zip
 
 # zippped file 
 *.zip
+
+# Crohns23-started folder for data
+**/Crohns23*
+**/Npz_files*
+**/work_dir/*
+**/inference/*
 
 # End of https://www.toptal.com/developers/gitignore/api/python
 n
