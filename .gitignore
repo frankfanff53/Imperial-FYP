@@ -545,6 +545,7 @@ pyrightconfig.json
 **/Crohns23*
 **/Npz_files*
 **/work_dir/*
+**/inference/*
 
 # End of https://www.toptal.com/developers/gitignore/api/python
 n
