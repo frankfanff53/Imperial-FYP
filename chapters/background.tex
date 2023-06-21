@@ -129,7 +129,7 @@ The key strengths of SLIC are its simplicity, ease of implementation, and adapta
 \end{algorithmic}
 \end{algorithm}
 
-The SLIC algorithm adapted from \cite{achanta2010slic} is illustrated in \autoref{alg:slic}. Note the term "Perturb" in line 2 of \autoref{alg:slic} essentially means to re-assign the cluster center in a \(n \times  n\) neighbourhood, where the re-assigned center is the point has lowest gradient position compare to the original cluster. Additionally, the residual error \(E\) is defined as the \(L_{1}\) distance between previous centers and recomputed centers.
+The SLIC algorithm adapted from \cite{achanta2010slic} is illustrated in \autoref{alg:slic}. Additionally, the residual error \(E\) in clustering is defined as the \(L_{1}\) distance between previous centers and recomputed centers.
 
 By integrating SLIC as part of our weak label generation strategy, we aim to utilise these inherent benefits to enhance the robustness of our machine learning models, thereby bringing rich insights from our medical imaging data in the absence of extensive manually-curated annotations.
 
