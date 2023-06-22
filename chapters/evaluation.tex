@@ -1,11 +1,11 @@
-With the culmination of our model's training and inference phases, we now turn our attention towards its assessment. The heart of this chapter is to critically evaluate our model performance and authenticate its effectiveness against preceding works. Chapter \ref{cha:Methodology} thoroughly explained the foundations and implementation of our baseline model, leveraging the SLIC algorithm, centerline coordinates, and extracted ROI. Consequently, we will not have any further discussion on the baseline construction here. Instead, this chapter will concentrate on identifying and deploying effective evaluation methodologies and metrics. This allows us for a rigorous assessemnt of our model performance and the validity of its results, helping us understand the strengths and limitations of our model and suggesting potential directions for future improvement.
+With the culmination of our model's training and inference phases, we now focus on its assessment. The heart of this chapter is to critically evaluate our model performance and authenticate its effectiveness against preceding works. Chapter \ref{cha:Methodology} thoroughly explained the foundations and implementation of our baseline model, leveraging the SLIC algorithm, centerline coordinates, and extracted ROI. Consequently, we will not further discuss the baseline construction here. Instead, this chapter will identify and deploy effective evaluation methodologies and metrics. This allows us for a rigorous assessment of our model performance and the validity of its results, helping us understand the strengths and limitations of our model and suggesting potential directions for future improvement.
 
 \section{Evaluation metric}
 \subsection{Dice Similarity Coefficient (DSC)}
 
-The Dice Similarity Coefficient (DSC), also known as the Sørensen-Dice coefficient, serves as a robust metric for quantifying overlap. This statistic facilitates an understanding of how closely the predicted segmentation aligns with the ground truth, playing a pivotal role in the assessment of image segmentation tasks.
+The Dice Similarity Coefficient (DSC), or the Sørensen-Dice coefficient, is a robust metric for quantifying overlap. This statistic facilitates understanding how closely the predicted segmentation aligns with the ground truth, which is pivotal in assessing image segmentation tasks.
 
-Suppose we have two sets \(X\) and \(Y\) representing our ground truth and predicted segmentations respectively. The DSC is defined as follows:
+Suppose we have two sets \(X\) and \(Y\) representing our ground truth and predicted segmentation, respectively. The DSC is defined as follows:
 \[
 \operatorname*{DSC} = \frac{2|X \cap Y|}{|X| + |Y|}
 \]
@@ -13,13 +13,13 @@ This equation encapsulates the ratio of twice the intersection of \(X\) and \(Y\
 \[
 \operatorname*{DSC} = \frac{2 \operatorname*{TP}}{2 \operatorname*{TP} + \operatorname*{FP} + \operatorname*{FN}} = F_{1}
 \]
-In this context, TP represents an agreement between our prediction \(Y\) and the ground truth \(X\), where both identify a positive label. FP and FN, on the other hand, correspond to discrepancies between \(Y\) and \(X\), which correspond to the areas where the classifier and ground truth disagree. This representation underlines the intimate relationship between DSC and classification metrics, demonstrating the capacity of the former to inform us about the precision and recall of our model, where both consider the significance of Ture Positives and penalises any False Positive predcitions. Thus its utility in image segmentation evaluation can be clearly seen.
+In this context, TP represents an agreement between our prediction \(Y\) and the ground truth \(X\), where both identify a positive label. FP and FN, however, correspond to discrepancies between \(Y\) and \(X\), which correspond to the areas where the classifier and ground truth disagree. This representation underlines the intimate relationship between DSC and classification metrics, demonstrating the capacity of the former to inform us about the precision and recall of our model, where both consider the significance of Ture Positives and penalise any False Positive predictions. Thus its utility in image segmentation evaluation can be seen.
 
 \subsection{Jeccard Similarity Coefficient}
 
-The Jaccard Similarity Coefficient is a well-established metric often associated with the DSC due to its role in evaluating the similarity and diversity of two sets. It quantifies the proportion of shared elements between the sets relative to their combined unique elements—essentially measuring the overlap against the total spread.
+The Jaccard Similarity Coefficient is a well-established metric often associated with the DSC due to its role in evaluating the similarity and diversity of two sets. It quantifies the proportion of shared elements between the sets relative to their combined unique features—essentially measuring the overlap against the total spread.
 
-Let us again consider two sets \(X\) and \(Y\), representing the ground truth and predicted segmentation masks respectively. The Jaccard Coefficient is defined as:
+Let us again consider two sets \(X\) and \(Y\), representing the ground truth and predicted segmentation masks, respectively. The Jaccard Coefficient is defined as:
 \[
 \operatorname*{JSC} = \frac{|X \cap Y|}{|X\cup Y|} = \frac{\operatorname*{TP}}{\operatorname*{TP} + \operatorname*{FP} + \operatorname*{FN}}
 \]
@@ -30,7 +30,7 @@ Further exploration allows us to rewrite the Jaccard Coefficient in the form:
     &= \frac{\operatorname*{DSC}}{2 - \operatorname*{DSC}}
 \end{align*}
 
-This computational equivalence solidifies the relationship between the Jaccard Coefficient and DSC, suggesting they both measure over a similar characteristic in the context of segmentation. Given this, they do not supply independent information useful for differential evaluation of model performance. Hence, in our methodology, we opt to utilize the DSC as the primary metric instead of Jaccard Coefficient to avoid redundancy.
+This computational equivalence solidifies the relationship between the Jaccard Coefficient and DSC, suggesting they both measure over a similar characteristic in the context of segmentation. Given this, they do not supply independent information useful for differential model performance evaluation. Hence, our methodology uses the DSC as the primary metric instead of the Jaccard Coefficient to avoid redundancy.
 
 \subsection{Hausdorff Distance}
 While the quantity of accurate predictions (True Positives) undoubtedly contributes to successful segmentation, it is equally critical to scrutinize the shape of the generated mask, particularly in applications like organ segmentation. The Hausdorff Distance offers a comprehensive measure for evaluating the morphological similarity between the boundaries or contours of a predicted mask and ground truth.
@@ -39,34 +39,34 @@ Imagine two point sets \(A\) and \(B\) representing the contour coordinates. In 
 \[
 \operatorname*{HD} = \max \left(h(A, B), h(B, A)\right)
 \]
-where \(h(\cdot, \cdot)\) is defined as the directed Hausdorff distance, represented as
+Where \(h(\cdot, \cdot)\) is defined as the directed Hausdorff distance, represented as
 \[
 h(A, B) = \max_{a \in A}\{ \min_{b \in B} d(a, b) \}
 \]
-Here, \(d\) signifies a defined distance metric - for instance, the Euclidean or Manhattan distance. This measure essentially quantifies the greatest of all the closest distances from a point in one set to the other set. The Hausdorff Distance consequently assesses the maximum discrepancy between the two contours, providing valuable insight into the precision of the segmentation boundaries. This robust metric thus serves as a decisive tool in evaluating our model performance on contour prediction accuracy.
+Here, \(d\) signifies a defined distance metric - for instance, the Euclidean or Manhattan distance. This measure essentially quantifies the greatest of all the closest distances from a point in one set to the other set. The Hausdorff Distance consequently assesses the maximum discrepancy between the two contours, providing valuable insight into the precision of the segmentation boundaries. Thus, This robust metric is a powerful tool for evaluating our model performance on contour prediction accuracy.
 \section{Evaluation Method}
 \subsection{Employing Dice Similarity Coefficient for Qualitative Evaluation}
 The Dice Similarity Coefficient (DSC) is a standard for validating medical volume segmentations and measuring similarity across segmentation stages. We apply it consistently to our initial coarse weak masks, refined weak masks, and final performance, enabling tracking of our model's evolution over time.
 
-Furthermore, by aligning our metric with prior work in this field, we ensure that our results are directly comparable to earlier research. This facet not only bolsters the robustness of our findings but also situates our contributions within the broader scholarly discourse.
+Furthermore, by aligning our metric with prior work in this field, we ensure our results are directly comparable to earlier research. This facet not only bolsters the robustness of our findings but also situates our contributions within the broader scholarly discourse.
 
 Hence, although seemingly straightforward, the strategic use of DSC plays a pivotal role in validating the efficacy of our segmentation method and facilitating meaningful comparisons with established literature.
 \subsection{Utilizing the t-Test for Evaluating Statistical Significance}
-In the realm of assessing improvements in our segmentation outcomes and weak label generation, we leverage the capabilities of a statistical method known as the t-test. This test serves as a potent tool in distinguishing if the means of two groups, i.e. our baseline model performance and our proposed model performance, are statistically disparate from each other.
+In assessing improvements in our segmentation outcomes and weak label generation, we leverage the capabilities of a statistical method known as the t-test. This test is a potent tool in distinguishing if the means of two groups, i.e. our baseline model performance and our proposed model performance, are statistically disparate.
 
-We make the null hypothesis (H0) to suggest no significant difference between the means of these two groups. Coversely, the alternative hypothesis (H1) represents the situation where there exists a notable divergence in performance, indicative of an enhancement brought about by our new model.
+We make the null hypothesis (H0) to suggest no significant difference between the means of these two groups. Conversely, the alternative hypothesis (H1) represents the situation where there exists a notable divergence in performance, indicative of an enhancement brought about by our new model.
 
-Upon conducting the t-test, which is carried out by comparing the means of these two distinct groups and subsequently calculating the p-value, we are guided by conventional standards to reject H0 and accept H1 if the p-value falls below the typical significance threshold of 0.05. Such an event signifies a statistically robust improvement in our proposed model over the baseline model.
+Upon conducting the t-test by comparing the means of these two distinct groups and calculating the p-value, we are guided by conventional standards to reject H0 and accept H1 if the p-value falls below the typical significance threshold of 0.05. Such an event signifies a statistically robust improvement in our proposed model over the baseline model.
 
-To summarize, the application of the t-test empowers us to conclusively attribute the witnessed improvements in our image segmentation results or weak-label generation not to random fluctuations, but to substantial enhancements intrinsic to our developed model.
+To summarize, the application of the t-test empowers us to conclusively attribute the witnessed improvements in our image segmentation results or weak-label generation not to random fluctuations but to substantial enhancements intrinsic to our developed model.
 
 \section{Evaluation Plan}
-A comprehensive evaluation plan has been conceived to ensure the fulfillment of our project objectives, meticulously assessing the performance at each pivotal milestone. The key components of our evaluation strategy involving the examination of the baseline model, refined masks, the fine-tuned model, and the execution of ablation studies are as follows:
+A comprehensive evaluation plan has been conceived to ensure the fulfilment of our project objectives, meticulously assessing the performance at each pivotal milestone. The key components of our evaluation strategy involving the examination of the baseline model, refined masks, the fine-tuned model, and the execution of ablation studies are as follows:
 
 \begin{enumerate}
-    \item \textbf{Baseline Model Evaluation}: We begin with a thorough evaluation of our baseline segmentation model, founded on the nnU-Net framework and reliant on the Simple Linear Iterative Clustering (SLIC) method for generating coarse-grained weak masks. Centered on transfer learning, this assessment phase will concentrate on the quality of the generated weak masks and the terminal ileum (T.I.) segmentation's initial performance, measured through the Dice Similarity Coefficient (DSC).
-    \item \textbf{Refined Mask Evaluation}: Upon successfully obtaining coarse-grained weak masks, the Segment Anything Model (SAM) is employed to yield refined masks with finer granularity. A comparative analysis will be conducted between the refined masks and coarse-grained masks, leveraging DSC and t-tests to examine their quality and effectiveness, as well as to validate the statistical significance of any observed improvements.
-    \item \textbf{Fine-Tuning and Target Model Evaluation}: With fully annotated data and refined weak masks, the model undergoes a fine-tuning process to attain our target segmentation model. This performance evaluation stage will utilize DSC for assessing the segmentation outcomes and t-tests for confirming the statistical significance of the achieved improvement.
-    \item \textbf{Ablation studies}: Lastly, we aim to empirically validate the impact of using centerlines in enhancing SAM-driven weak mask generation. For this purpose, an ablation study will be undertaken to compare the quality of weak mask generation obtained from SAM with and without bounding boxes defined by the centerlines.
+    \item \textbf{Baseline Model Evaluation}: We begin with a thorough evaluation of our baseline segmentation model, founded on the nnU-Net framework and reliant on the Simple Linear Iterative Clustering (SLIC) method for generating coarse-grained weak masks. Centred on transfer learning, this assessment phase will concentrate on the quality of the generated weak masks and the terminal ileum (T.I.) segmentation's initial performance, measured through the Dice Similarity Coefficient (DSC).
+    \item \textbf{Refined Mask Evaluation}: Upon successfully obtaining coarse-grained weak masks, the Segment Anything Model (SAM) is employed to yield refined masks with finer granularity. A comparative analysis will be conducted between the refined and coarse-grained masks, leveraging DSC and t-tests to examine their quality and effectiveness and validate the statistical significance of any observed improvements.
+    \item \textbf{Fine-Tuning and Target Model Evaluation}: With fully annotated data and refined weak masks, the model undergoes a fine-tuning process to attain our target segmentation model. This performance evaluation stage will utilize DSC to assess the segmentation outcomes and t-tests to confirm the achieved improvement's statistical significance.
+    \item \textbf{Ablation studies}: Lastly, we aim to empirically validate the impact of using centerlines in enhancing SAM-driven weak mask generation. For this purpose, an ablation study will compare the quality of weak mask generation obtained from SAM with and without bounding boxes defined by the cents.
 \end{enumerate}
 This robust evaluation blueprint ensures a methodical examination of our work, promising to validate the success of our project at every step and affirming its effective contribution to the advancement of terminal ileum segmentation.

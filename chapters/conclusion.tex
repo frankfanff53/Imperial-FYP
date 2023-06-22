@@ -1,38 +1,47 @@
 \section{Conclusion}
 
-In this project, we presented our methodology, which leverages the strength of a refined weak label generation process, coupled with the capabilities of a pre-trained SAM model. The cornerstone of our approach lies in the fine-tuning of our model using comprehensive, fully annotated segmentation files. We subjected the resultant weak masks to a subsequent level of fine-tuning, thereby sculpting our target model.
+In this project, we presented our methodology, which leverages the strength of a refined weak label generation process and the capabilities of a pre-trained SAM model. The cornerstone of our approach lies in fine-tuning our model using comprehensive, fully annotated segmentation files. We subjected the resultant weak masks to a subsequent level of fine-tuning, thereby sculpting our target model.
 
 The effectiveness of our proposed method is reflected in the marked enhancement of the Dice Similarity Coefficient (DSC) values. With an improvement of 29.53\% and 15.45\% across different modalities, the highest average DSC surged from 0.58 to a more favourable score of 0.73. This uplift signifies a substantial enhancement in the overlap between the predicted and actual segmentations, underscoring the efficacy of our technique in performing accurate segmentation tasks.
 
 Further consolidating the credibility of our results, we performed graphical and statistical validation. This process ensured that the observed improvements were not the result of random variations but were a consequence of the systematic enhancements integrated into our model.
 
-Additionally, we embarked on rigorous ablation studies to expound the contribution of each step in our refined method. In the course of these explorations, the localisation of the terminal ileum (T.I.) within the bounding box emerged as a critical factor during the fine-tuning of the SAM model. The study reaffirmed the significance of maintaining attention to organ-specific regions for improved segmentation outcomes.
+Additionally, we embarked on rigorous ablation studies to expound the contribution of each step in our refined method. During these explorations, the localisation of the terminal ileum (T.I.) within the bounding box emerged as a critical factor during the fine-tuning of the SAM model. The study reaffirmed the significance of maintaining attention to organ-specific regions for improved segmentation outcomes.
 
-In conclusion, our work advances the frontiers of medical image segmentation by proposing a refined method that amalgamates weak label generation with a pre-trained SAM model and strategic fine-tuning stages. Validated by substantial improvements and statistically confirmed results, our method establishes its potential for future applications in the domain of medical imaging and diagnostics.
+In conclusion, our work advances the frontiers of medical image segmentation by proposing an advanced method that amalgamates weak label generation with a pre-trained SAM model and strategic fine-tuning stages. Validated by substantial improvements and statistically confirmed results, our process establishes its potential for future medical imaging and diagnostics applications.
 
 \section{Future Work}
 
 \subsubsection*{Diffusion Models as Synthetic Data Generators}
 While our current model has demonstrated encouraging outcomes, the inherent limitation imposed by the scarcity of data and manual segmentations remains a constraint on the performance enhancement and generalizability in tackling Crohn's disease through segmentation.
 
-Recent studies, such as Lu et al. \cite{lu2023minddiffuser} and Xie et al. \cite{xie2023synthesizing}, have highlighted the proficiency of diffusion models in synthesizing Magnetic Resonance (MR) Images effectively. Seizing upon this burgeoning field, we perceive a promising new research trajectory to explore.
+Recent studies, such as Lu et al. \cite{lu2023minddiffuser} and Xie et al. \cite{xie2023synthesizing}, have highlighted the proficiency of diffusion models in synthesising Magnetic Resonance (MR) Images effectively. We see a promising new research trajectory to explore in this burgeoning field.
 
-Diffusion models can act as instrumental tools to fabricate or reconstruct synthetic abdominal MRI scans. This approach circumvents the need for extensive manual segmentations, which often entail significant temporal and financial costs.
+Diffusion models can be instrumental in fabricating or reconstructing synthetic abdominal MRI scans. This approach circumvents the need for extensive manual segmentations, which often entail significant temporal and financial costs.
 
-By harnessing the power of diffusion models, we open up avenues for creating a robust, diversified data corpus that eliminates the need for resource-intensive manual input and paves the way for advanced explorations in tackling abdominal imaging challenges.
+By harnessing the power of diffusion models, we open avenues for creating a robust, diversified data corpus that eliminates the need for resource-intensive manual input and paves the way for advanced explorations in tackling abdominal imaging challenges.
 
-The infusion of synthetic data can enrich the diversity and volume of available data, providing a more robust, comprehensive substrate for training our model. Coupled with our potent methodology in proxy training, this offers a unique vantage point to push the boundaries of segmentation performance in tackling Crohn's disease.
+Infusing synthetic data can enrich the diversity and volume of available data, providing a more robust, comprehensive substrate for training our model. Coupled with our potent methodology in proxy training, this offers a unique vantage point to push the boundaries of segmentation performance in tackling Crohn's disease.
 
-As a tangible extension of our present work, leveraging diffusion models for synthetic data generation holds the potential to significantly address data limitations and propel the efficacy of deep learning algorithms in diagnosing and treating Crohn's disease to unprecedented levels.
+As a natural extension of our present work, leveraging diffusion models for synthetic data generation can significantly address data limitations and propel the efficacy of deep learning algorithms in diagnosing and treating Crohn's disease to unprecedented levels.
+
+\subsubsection*{Abnormal T.I. Tissues Detection}
+Our research has laid a solid groundwork with a binary segmentation model for the terminal ileum (T.I.) in T2-weighted MRI images, displaying exceptional segmentation outcomes - a pivotal stride towards improved diagnostics.
+
+Looking ahead, we aim to extend this research by devising sophisticated multi-class segmentation models capable of distinguishing between normal and abnormal T.I. tissues based on prior work \cite{Ali2022}. The remarkable performance of our current binary segmentation model sets an encouraging precedent for this upcoming venture.
+
+The advent of a multi-class segmentation model will significantly heighten diagnostic precision by identifying varying pathologies within the T.I., thereby paving the way for tailored treatment plans. This advance will also provide a crucial understanding of disease progression by shedding light on the characteristics and severity of tissue abnormalities.
+
+Implementation of such a multi-class model poses challenges, including dataset class imbalance and the need for intricate training processes. However, strategies like data augmentation, transfer learning, or innovative loss functions can be explored to alleviate these challenges.
+
+The success of this future endeavour bears profound implications for refining early detection and treatment planning for Crohn’s patients and enhancing their quality of life. This avenue of research harbours extensive potential for managing Crohn’s disease and potentially other gastrointestinal disorders exhibiting similar radiographic patterns.
+
 
 \subsubsection*{Human in the Loop}
 
-While deep learning techniques can automate the process of segmentation and analysis, the incorporation of human expertise can significantly improve the reliability and effectiveness of the model. Future work could explore “human-in-the-loop” methods where medical experts provide real-time feedback during the training process. This could allow for the development of more sophisticated models that better understand and mimic expert knowledge in the diagnosis and treatment of Crohn's disease.
+While deep learning techniques can automate the process of segmentation and analysis, incorporating human expertise can significantly improve the reliability and effectiveness of the model. Future work could explore "human-in-the-loop" methods where medical experts provide real-time feedback during the training process. This could allow for developing more sophisticated models that better understand and mimic expert knowledge in diagnosing and treating Crohn's disease.
 
 \subsubsection*{Real-Time Segmentation}
-In medical applications, real-time processing carries critical importance for timely diagnosis and treatment. A future research objective could be devoted to optimizing our model performance for real-time segmentation. This would be particularly beneficial during surgical procedures or emergency scenarios where clinicians require immediate information. Adapting our model to operate effectively in real-time conditions will necessitate focused research on computational efficiency and speed optimization.
+In medical applications, real-time processing is critical for timely diagnosis and treatment. A future research objective could be devoted to optimizing our model performance for real-time segmentation. This would be particularly beneficial during surgical procedures or emergency scenarios where clinicians require immediate information. Adapting our model to operate effectively in real-time conditions will necessitate focused research on computational efficiency and speed optimization.
 
 Collectively, these future pursuits promise to enhance the potency of deep learning algorithms in mastering the challenging task of diagnosing and combating Crohn's disease, moving us closer to more efficient patient outcomes and healthcare services.
-
-
-
