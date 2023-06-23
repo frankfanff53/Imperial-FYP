@@ -11,7 +11,6 @@ from segment_anything.utils.transforms import ResizeLongestSide
 from crohns import get_bbox_from_mask, show_box, show_mask
 from crohns.medsam_utils import finetune_model_predict
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(

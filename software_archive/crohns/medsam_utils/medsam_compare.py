@@ -14,7 +14,7 @@ from crohns import compute_dice_coefficient, get_bbox_from_mask, show_mask
 def finetune_model_predict(
     img_np, box_np, sam_trans, sam_model_tune, device="cuda:0"
 ):
-    """ Predict the segmentation mask for the given image and bounding box
+    """Predict the segmentation mask for the given image and bounding box
     using the finetuned model.
 
     Args:

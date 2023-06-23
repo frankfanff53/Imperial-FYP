@@ -1,1 +1,1 @@
-from .medsam_compare import *
+from .medsam_compare import * # noqa F401
