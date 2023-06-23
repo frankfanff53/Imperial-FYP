@@ -1,7 +1,6 @@
 import argparse
 import os
 from pathlib import Path
-from typing import Optional
 
 import numpy as np
 import SimpleITK as sitk
@@ -13,10 +12,23 @@ from tqdm import tqdm
 
 
 def train_val_split(
-    images_folder_path: Path,
-    gts_folder_path: Path,
-    train_ratio: Optional[float] = 0.8,
-) -> tuple:
+    images_folder_path,
+    gts_folder_path,
+    train_ratio=0.8,
+):
+    """Split the images and ground truths into training and validation sets.
+
+    Args:
+        images_folder_path: the path to the folder containing the images.
+        gts_folder_path: the path to the folder containing the ground truths.
+        train_ratio: the ratio of training images to all images.
+
+    Returns:
+        a tuple of four Numpy arrays: (train_images_paths, train_gts_paths,
+        val_images_paths, val_gts_paths).
+    """
+    images_folder_path = Path(images_folder_path)
+    gts_folder_path = Path(gts_folder_path)
     all_images_paths = np.array(sorted(images_folder_path.glob("*.nii.gz")))
     all_gts_paths = np.array(sorted(gts_folder_path.glob("*.nii.gz")))
 
@@ -24,8 +36,9 @@ def train_val_split(
         raise ValueError("Number of images and ground truths is different")
 
     shuffled_indices = np.random.permutation(len(all_images_paths))
-    train_indices = shuffled_indices[: int(len(all_images_paths) * train_ratio)]
-    val_indices = shuffled_indices[int(len(all_images_paths) * train_ratio) :]
+    train_limit = int(len(all_images_paths) * train_ratio)
+    train_indices = shuffled_indices[:train_limit]
+    val_indices = shuffled_indices[train_limit:]
 
     train_images_paths = all_images_paths[train_indices]
     train_gts_paths = all_gts_paths[train_indices]
@@ -37,6 +50,17 @@ def train_val_split(
 
 
 def resize(data, size, data_class):
+    """Resize the data to the given size.
+
+    Args:
+        data: the data to resize.
+        size: the size to resize to.
+        data_class: the class of the data. Must be either "image" or "gt".
+
+    Returns:
+        the resized data.
+    """
+
     if data_class == "image":
         order = 3
     elif data_class == "gt":
@@ -54,12 +78,21 @@ def resize(data, size, data_class):
     )
 
 
-def preprocess_image(image_path):
-    image = sitk.ReadImage(str(image_path))
-    image = sitk.GetArrayFromImage(image)
+def preprocess_image(image):
+    """Preprocess the image.
 
-    lower_bound, upper_bound = np.percentile(image, 0.5), np.percentile(image, 99.5)
+    Args:
+        image: the image to preprocess. Must be a Numpy array.
+
+    Returns:
+        the preprocessed image.
+    """
+
+    lower_bound, upper_bound = np.percentile(image, 0.5), np.percentile(
+        image, 99.5
+    )
     image_processed = np.clip(image, lower_bound, upper_bound)
+    # image normalisation
     image_processed = (
         (image_processed - lower_bound) / (upper_bound - lower_bound) * 255.0
     )
@@ -70,6 +103,21 @@ def preprocess_image(image_path):
 
 
 def preprocess(image_path, gt_path, image_size, model, device):
+    """Preprocess the image and ground truth.
+
+    Args:
+        image_path: the path to the image.
+        gt_path: the path to the ground truth.
+        image_size: the size to resize the image to.
+        model: the model to use for image embedding.
+        device: the device to use for image embedding.
+
+    Returns:
+        a tuple of three Numpy arrays: (image_volume, gt_volume,
+        image_embeddings) when model is not None, otherwise a tuple of two
+        Numpy arrays: (image_volume, gt_volume).
+    """
+
     image = sitk.ReadImage(str(image_path))
     image = sitk.GetArrayFromImage(image)
 
@@ -82,13 +130,7 @@ def preprocess(image_path, gt_path, image_size, model, device):
     image_volume, gt_volume, image_embeddings = [], [], []
 
     if np.sum(gt) > 1000:
-        lower_bound, upper_bound = np.percentile(image, 0.5), np.percentile(image, 99.5)
-        image_processed = np.clip(image, lower_bound, upper_bound)
-        image_processed = (
-            (image_processed - lower_bound) / (upper_bound - lower_bound) * 255.0
-        )
-        image_processed[image == 0] = 0
-        image_processed = np.uint8(image_processed)
+        image_processed = preprocess_image(image)
 
         z_idx = np.where(gt > 0)[0]
         z_min, z_max = np.min(z_idx), np.max(z_idx)
@@ -98,18 +140,26 @@ def preprocess(image_path, gt_path, image_size, model, device):
 
             if np.sum(gt_slice) > 100:
                 gt_volume.append(gt_slice)
-                img_slice = resize(image_processed[i, :, :], image_size, "image")
+                img_slice = resize(
+                    image_processed[i, :, :], image_size, "image"
+                )
                 # convert to a 3-channel image
-                img_slice = np.uint8(np.repeat(img_slice[:, :, None], 3, axis=-1))
+                img_slice = np.uint8(
+                    np.repeat(img_slice[:, :, None], 3, axis=-1)
+                )
                 image_volume.append(img_slice)
 
                 if model is not None:
-                    sam_tramsform = ResizeLongestSide(model.image_encoder.img_size)
+                    sam_tramsform = ResizeLongestSide(
+                        model.image_encoder.img_size
+                    )
                     resize_img = sam_tramsform.apply_image(img_slice)
                     resize_img_tensor = torch.as_tensor(
                         resize_img.transpose(2, 0, 1)
                     ).to(device)
-                    input_image = model.preprocess(resize_img_tensor[None, :, :, :])
+                    input_image = model.preprocess(
+                        resize_img_tensor[None, :, :, :]
+                    )
                     with torch.no_grad():
                         embedding = model.image_encoder(input_image)
                         image_embeddings.append(embedding.cpu().numpy()[0])
@@ -167,9 +217,9 @@ if __name__ == "__main__":
         help="whether to do inference or not",
     )
 
-    parser.add_argument("--anatomy", type=str, default="Crohns", help="anatomy")
-
-    parser.add_argument("--model_type", type=str, default="vit_b", help="model type")
+    parser.add_argument(
+        "--model_type", type=str, default="vit_b", help="model type"
+    )
 
     parser.add_argument(
         "--checkpoint",
@@ -180,18 +230,20 @@ if __name__ == "__main__":
 
     parser.add_argument("--device", type=str, default="cuda:0", help="device")
 
-    parser.add_argument("--seed", type=int, default=1706576, help="random seed")
+    parser.add_argument("--seed", type=int, default=42, help="random seed")
 
     args = parser.parse_args()
 
-    prefix = "_".join(["MR", args.anatomy, args.direction])
+    prefix = f"MR_Crohns_{args.direction}"
 
     # split names into training and validation
     base_path = Path(os.getcwd())
     # path for saving the npz files
     npz_path = base_path / args.npz_path
     # load the model
-    model = sam_model_registry[args.model_type](args.checkpoint).to(args.device)
+    model = sam_model_registry[args.model_type](args.checkpoint).to(
+        args.device
+    )
 
     np.random.seed(args.seed)
 
@@ -199,7 +251,9 @@ if __name__ == "__main__":
         npz_path_all = npz_path / prefix / "data"
         npz_path_all.mkdir(parents=True, exist_ok=True)
 
-        images_paths = sorted(list((base_path / args.nii_path).glob("*.nii.gz")))
+        images_paths = sorted(
+            list((base_path / args.nii_path).glob("*.nii.gz"))
+        )
         gts_paths = sorted(list((base_path / args.gt_path).glob("*.nii.gz")))
 
         for image_path, gt_path in tqdm(
@@ -241,7 +295,8 @@ if __name__ == "__main__":
 
         # preprocess the training images
         for image_path, gt_path in tqdm(
-            zip(train_images_paths, train_gts_paths), total=len(train_images_paths)
+            zip(train_images_paths, train_gts_paths),
+            total=len(train_images_paths),
         ):
             image_volume, gt_volume, image_embeddings = preprocess(
                 image_path,

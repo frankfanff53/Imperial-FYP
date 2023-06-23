@@ -21,7 +21,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--fold",
         type=int,
-        nargs='+',
+        nargs="+",
         required=True,
         help="Fold ID.",
     )

@@ -4,15 +4,13 @@ import shutil
 from pathlib import Path
 
 import numpy as np
-from batchgenerators.utilities.file_and_folder_operations import (
-    maybe_mkdir_p, subdirs)
-from nnunetv2.dataset_conversion.generate_dataset_json import \
-    generate_dataset_json
+from batchgenerators.utilities.file_and_folder_operations import maybe_mkdir_p, subdirs
+from nnunetv2.dataset_conversion.generate_dataset_json import generate_dataset_json
 from nnunetv2.paths import nnUNet_raw
 from tqdm import tqdm
 
 MODALITY_ENCODINGS = {
-    'T2': 0,
+    "T2": 0,
 }
 
 if __name__ == "__main__":
@@ -74,7 +72,7 @@ if __name__ == "__main__":
     case_dirs = np.array(subdirs(input_dataset_dir, join=False))
     if args.dataset_size is not None:
         shuffle_index = np.random.permutation(len(case_dirs))
-        case_dirs = case_dirs[shuffle_index][:args.dataset_size]
+        case_dirs = case_dirs[shuffle_index][: args.dataset_size]
     print(f"Number of cases: {len(case_dirs)}")
 
     # Copy the images and labels to the output directory.
@@ -84,13 +82,13 @@ if __name__ == "__main__":
         # copy different modalities to imagesTr
         for modality in MODALITY_ENCODINGS.keys():
             modality_file_name = f"{case_dir_id}_{modality.lower()}.nii.gz"
-            converted_modality_file_name = f"{case_dir_id}" \
-                f"_{MODALITY_ENCODINGS[modality]:04}.nii.gz"
+            converted_modality_file_name = (
+                f"{case_dir_id}" f"_{MODALITY_ENCODINGS[modality]:04}.nii.gz"
+            )
             modality_file = input_case_dir / modality_file_name
             if modality_file.exists():
                 shutil.copy(
-                    modality_file,
-                    images_dir / converted_modality_file_name
+                    modality_file, images_dir / converted_modality_file_name
                 )
 
         # copy the segmentation to labelsTr
@@ -100,7 +98,7 @@ if __name__ == "__main__":
         if segmentation_file.exists():
             shutil.copy(
                 segmentation_file,
-                labels_dir / converted_segmentation_file_name
+                labels_dir / converted_segmentation_file_name,
             )
         else:
             print(f"Segmentation file {segmentation_file} does not exist!")
@@ -109,7 +107,10 @@ if __name__ == "__main__":
         # Create the dataset json file.
         generate_dataset_json(
             output_folder=converted_dataset_dir,
-            channel_names={encoding: modality for modality, encoding in MODALITY_ENCODINGS.items()},
+            channel_names={
+                encoding: modality
+                for modality, encoding in MODALITY_ENCODINGS.items()
+            },
             labels={
                 "background": 0,
                 "terminal ileum": 1,

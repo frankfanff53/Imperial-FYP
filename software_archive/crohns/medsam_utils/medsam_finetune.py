@@ -5,23 +5,25 @@ from pathlib import Path
 import monai
 import numpy as np
 import torch
-from matplotlib import pyplot as plt
 from segment_anything import sam_model_registry
 from segment_anything.utils.transforms import ResizeLongestSide
 from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
+
+from crohns import get_bbox_from_mask
 
 
 class NpzDataset(Dataset):
     def __init__(self, data_root):
         self.data_root = data_root
         self.npz_files = sorted(os.listdir(self.data_root))
-        self.npz_data = [np.load(os.path.join(data_root, f)) for f in self.npz_files]
-        # this implementation is ugly but it works (and is also fast for feeding data to GPU) if your server has enough RAM
-        # as an alternative, you can also use a list of npy files and load them one by one
+        self.npz_data = [
+            np.load(os.path.join(data_root, f)) for f in self.npz_files
+        ]
         self.ori_gts = np.vstack([d["gts"] for d in self.npz_data])
-        self.img_embeddings = np.vstack([d["img_embeddings"] for d in self.npz_data])
-        print(f"{self.img_embeddings.shape=}, {self.ori_gts.shape=}")
+        self.img_embeddings = np.vstack(
+            [d["img_embeddings"] for d in self.npz_data]
+        )
 
     def __len__(self):
         return self.ori_gts.shape[0]
@@ -29,16 +31,7 @@ class NpzDataset(Dataset):
     def __getitem__(self, index):
         img_embed = self.img_embeddings[index]
         gt2D = self.ori_gts[index]
-        y_indices, x_indices = np.where(gt2D > 0)
-        x_min, x_max = np.min(x_indices), np.max(x_indices)
-        y_min, y_max = np.min(y_indices), np.max(y_indices)
-        # add perturbation to bounding box coordinates
-        H, W = gt2D.shape
-        x_min = max(0, x_min - np.random.randint(0, 20))
-        x_max = min(W, x_max + np.random.randint(0, 20))
-        y_min = max(0, y_min - np.random.randint(0, 20))
-        y_max = min(H, y_max + np.random.randint(0, 20))
-        bboxes = np.array([x_min, y_min, x_max, y_max])
+        bboxes = get_bbox_from_mask(gt2D)
         # convert img embedding, mask, bounding box to torch tensor
         return (
             torch.tensor(img_embed).float(),
@@ -64,12 +57,19 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        "--model-dir", type=str, default="work_dir", help="path to the model directory"
+        "--model-dir",
+        type=str,
+        default="work_dir",
+        help="path to the model directory",
     )
 
-    parser.add_argument("--task-name", type=str, required=True, help="task name")
+    parser.add_argument(
+        "--task-name", type=str, required=True, help="task name"
+    )
 
-    parser.add_argument("--model-type", type=str, default="vit_b", help="model type")
+    parser.add_argument(
+        "--model-type", type=str, default="vit_b", help="model type"
+    )
 
     parser.add_argument(
         "--checkpoint",
@@ -104,13 +104,13 @@ if __name__ == "__main__":
         "--patience",
         type=int,
         default=10,
-        help="patience",
+        help="patience for early stopping",
     )
 
     parser.add_argument(
         "--random-seed",
         type=int,
-        default=1706576,
+        default=42,
         help="random seed",
     )
 
@@ -137,7 +137,6 @@ if __name__ == "__main__":
     optimizer = torch.optim.Adam(
         model.mask_decoder.parameters(),
         lr=args.learning_rate,
-        # weight_decay=1e-5,
     )
 
     loss_func = monai.losses.DiceLoss(
@@ -174,11 +173,14 @@ if __name__ == "__main__":
             with torch.no_grad():
                 box_np = boxes.numpy()
                 sam_trans = ResizeLongestSide(model.image_encoder.img_size)
-                box = sam_trans.apply_boxes(box_np, (gt2D.shape[-2], gt2D.shape[-1]))
+                box = sam_trans.apply_boxes(
+                    box_np, (gt2D.shape[-2], gt2D.shape[-1])
+                )
                 box_torch = torch.tensor(box).float().to(args.device)
                 if len(box_torch.shape) == 2:
                     box_torch = box_torch[:, None, :]
-                # embeddings
+                # use bounding box to get sparse and dense embeddings
+                # which helps in enhacing the prediction
                 sparse_embeddings, dense_embeddings = model.prompt_encoder(
                     points=None,
                     boxes=box_torch,
@@ -206,11 +208,13 @@ if __name__ == "__main__":
             with torch.no_grad():
                 box_np = boxes.numpy()
                 sam_trans = ResizeLongestSide(model.image_encoder.img_size)
-                box = sam_trans.apply_boxes(box_np, (gt2D.shape[-2], gt2D.shape[-1]))
+                box = sam_trans.apply_boxes(
+                    box_np, (gt2D.shape[-2], gt2D.shape[-1])
+                )
                 box_torch = torch.tensor(box).float().to(args.device)
                 if len(box_torch.shape) == 2:
                     box_torch = box_torch[:, None, :]
-                # embeddings
+
                 if "ablation" in args.task_name:
                     box_torch = None
                 sparse_embeddings, dense_embeddings = model.prompt_encoder(
@@ -231,13 +235,19 @@ if __name__ == "__main__":
             val_losses.append(loss.item())
         train_loss, val_loss = np.mean(train_losses), np.mean(val_losses)
         losses.append((train_loss, val_loss))
-        print(f"Epoch {epoch} train loss: {train_loss:.4f}, val loss: {val_loss:.4f}")
+        print(
+            f"Epoch {epoch} train loss: {train_loss:.4f}, val loss: {val_loss:.4f}"
+        )
 
-        torch.save(model.state_dict(), model_save_path / "sam_model_lateset.pth")
+        torch.save(
+            model.state_dict(), model_save_path / "sam_model_lateset.pth"
+        )
 
         if val_loss < best_loss:
             best_loss = val_loss
-            torch.save(model.state_dict(), model_save_path / "sam_model_best.pth")
+            torch.save(
+                model.state_dict(), model_save_path / "sam_model_best.pth"
+            )
         # early stopping
         if val_loss < early_stopping_val_loss:
             early_stopping_val_loss = val_loss
@@ -245,12 +255,3 @@ if __name__ == "__main__":
         if epoch - early_stopping_start_epoch > early_stopping_patience:
             print(f"Early stopping at epoch {epoch}")
             break
-
-    train_losses_all, val_losses_all = zip(*losses)
-    plt.plot(train_losses_all, label="Train Loss")
-    plt.plot(val_losses_all, label="Validation Loss")
-    plt.title("Dice + Cross Entropy Loss", fontsize=16, fontweight="bold")
-    plt.xlabel("Epoch")
-    plt.ylabel("Loss")
-    plt.savefig(model_save_path / "loss.png", dpi=300)
-    plt.show()
