@@ -53,6 +53,31 @@ nnU-Net requires three environmental variables to be set:
 
 We need to add the three variables above to your environment variables, by modifying your shell configuration file (e.g. `.bashrc` or `.zshrc`), or go to your OS settings (especially for Windows).
 
+#### Preprocess your data
+You might want to convert your ground truth segmentation to a binary output of the label, or change the geometry of your ground truth label to match the geometry of your image, `crohns/data_normalisation.py` provides a set of API to achieve these data preprocessing techiniques.
+
+#### Baseline
+To process the image data for the baseline model, please refer to `crohns/baseline/processing_image.py`, after processing, you can refer to `crohns/baseline/weak_label_generation.py` for generating the weak mask for proxy learning.
+
+#### Fine-tune your SegmentAnything (SAM) model
+To adapt our data to the SAM model, we need to fine-tune a pre-trained SAM checkpoint over our data. The data needs to be further processed via
+```bash
+python crohns/medsam_utils/preprocess.py -i PATH_TO_THE_IMG_FOLDER -gt PATH_TO_THE_GROUND_TRUTH_FOLDER -o PATH_TO_THE_OUTPUT_FOlDER
+```
+The processed data will be allocated to the output folder specified in the command above, and be splitted into a training and a validation set. The processed data can then be feeded to the fine-tuning pipeline via the following
+```bash
+python crohns/medsam_utils/medsam_finetune.py --train-data-root TRAIN_DATA_PATH --val-data-root VAL_DATA_PATH --task-name TASK_NAME --batch-size BATCH_SIZE --lr LEARNING_RATE --num-epochs EPOCHS
+```
+You can set the hyperparameters to play around with the SAM model. If you want to look at the difference between the un-tuned and fine-tuned SAM model, you can refer to `medsam_compare.py` with your validation data for further investigations.
+
+Note that here the argument `task_name` will be a unique identifier of the fine-tuned model, we will re-use this argument value for selecting the correct model for inference.
+
+After fine-tuning, you can run inference on unseen data to get a refined weak mask, by the following commands:
+
+```bash
+python crohns/medsam_utils/inference.py -i UNSEEN_DATA_PATH --task-name TASK_NAME
+```
+
 #### Convert the Training dataset
 For nnU-Net you need to use a dataset with strict formats
 
