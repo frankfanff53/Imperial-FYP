@@ -13,7 +13,6 @@
 
 %%%%%% TITLE, AUTHOR, DATE DEFINITIONS %%%%%%
 \title{Tackling Crohn's Disease using Deep Learning}
-\subtitle{{\it a Refinement with SegmentAnything Model}}
 \author{Feifan Fan}
 \date{\today}
 %%%%%%
@@ -26,7 +25,7 @@
 }
 
 \begin{frame}
-	\frametitle{Overview} % Table of contents slide, comment this block out to remove it
+	\frametitle{Outline} % Table of contents slide, comment this block out to remove it
 	\tableofcontents % Throughout your presentation, if you choose to use \section{} and \subsection{} commands, these will automatically be printed on this slide as an overview of your presentation
 \end{frame}
 	
@@ -37,70 +36,113 @@
 	%------------------------------------------------
 \section{Introduction} % Sections can be created in order to organize your presentation into discrete blocks, all sections and subsections are automatically printed in the table of contents as an overview of the talk
 %------------------------------------------------
-	
-\subsection{Background} % A subsection can be created just before a set of slides with a common theme to further break down your presentation into chunks
-
 \begin{frame}
-\frametitle{Paragraphs of Text}
-Sed iaculis dapibus gravida. Morbi sed tortor erat, nec interdum arcu. Sed id lorem lectus. Quisque viverra augue id sem ornare non aliquam nibh tristique. Aenean in ligula nisl. Nulla sed tellus ipsum. Donec vestibulum ligula non lorem vulputate fermentum accumsan neque mollis.\\~\\
-
-Sed diam enim, sagittis nec condimentum sit amet, ullamcorper sit amet libero. Aliquam vel dui orci, a porta odio. Nullam id suscipit ipsum. Aenean lobortis commodo sem, ut commodo leo gravida vitae. Pellentesque vehicula ante iaculis arcu pretium rutrum eget sit amet purus. Integer ornare nulla quis neque ultrices lobortis. Vestibulum ultrices tincidunt libero, quis commodo erat ullamcorper id.
-\end{frame}
-	
-% ------------------------------------------------
-	
-\begin{frame}
-\frametitle{Bullet Points}
-\begin{itemize}
-\item Lorem ipsum dolor sit amet, consectetur adipiscing elit
-\item Aliquam blandit faucibus nisi, sit amet dapibus enim tempus eu
-\item Nulla commodo, erat quis gravida posuere, elit lacus lobortis est, quis porttitor odio mauris at libero
-\item Nam cursus est eget velit posuere pellentesque
-\item Vestibulum faucibus velit a augue condimentum quis convallis nulla gravida
-\end{itemize}
+	\frametitle{Overview of this Project}
+	%Elaborate the purpose of your research
+	%For example:
+	\begin{figure}[hp]
+		\centering
+		\includegraphics[width=0.5\textwidth]{../figures/seg_medsam.png}
+	\end{figure}
 \end{frame}
 
-% ------------------------------------------------
-
 \begin{frame}
-\frametitle{Blocks of Highlighted Text}
-\begin{block}{Block 1}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lectus nisl, ultricies in feugiat rutrum, porttitor sit amet augue. Aliquam ut tortor mauris. Sed volutpat ante purus, quis accumsan dolor.
-\end{block}
+\frametitle{Crohn's Disease}
 
-\begin{block}{Block 2}
-Pellentesque sed tellus purus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum quis magna at risus dictum tempor eu vitae velit.
-\end{block}
-
-\begin{block}{Block 3}
-Suspendisse tincidunt sagittis gravida. Curabitur condimentum, enim sed venenatis rutrum, ipsum neque consectetur orci, sed blandit justo nisi ac lacus.
-\end{block}
-\end{frame}
-
-% ------------------------------------------------
-
-\begin{frame}
-\frametitle{Multiple Columns}
 \begin{columns}[c] % The "c" option specifies centered vertical alignment while the "t" option is used for top vertical alignment
 
-\column{.45\textwidth} % Left column and width
-\textbf{Heading}
-\begin{enumerate}
-\item Statement
-\item Explanation
-\item Example
-\end{enumerate}
+	\column{.48\textwidth} % Left column and width
+	\begin{itemize}
+		\item Crohn's disease is a chronic, incurable type of Inflammatory Bowel Disease (IBD).
+		\item It affects over half a million individuals in the UK and can cause serious complications.
+		\item Symptoms of Crohn's disease are diverse and can include abdominal pain, diarrhea, fatigue, and weight loss.
+		\end{itemize}
+	
+	\column{.48\textwidth} % Right column and width
+	\begin{figure}[htp]
+		\centering
+		\includegraphics[width=\textwidth]{../figures/digestion-graphic.jpg}
+		\caption{The gastrointestinal tract of a Human}
+		\label{fig:gi-tract}
+	\end{figure}
+	
+	\end{columns}
+\end{frame}
 
-\column{.5\textwidth} % Right column and width
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lectus nisl, ultricies in feugiat rutrum, porttitor sit amet augue. Aliquam ut tortor mauris. Sed volutpat ante purus, quis accumsan dolor.
+\begin{frame}
+	\frametitle{Terminal Ileum}
+	\begin{columns}[c] % The "c" option specifies centered vertical alignment while the "t" option is used for top vertical alignment
+		\column{.48\textwidth} % Left column and width
+		\begin{itemize}
+			
+			\item Examination of the terminal ileum can significantly improve patient outcomes.
 
-\end{columns}
+			\item Related work found a strong correlation between the performance of the automated detection of Crohn's disease and the degree of localisation in the training data. 
+			\end{itemize}
+		
+		\column{.48\textwidth} % Right column and width
+		\begin{figure}[htp]
+			\centering
+			\includegraphics[width=\textwidth]{../figures/crohn's_ileitis-350x328.png}
+			\caption{Terminal Ileum}
+			\label{fig:terminal-ileum}
+		\end{figure}
+		
+		\end{columns}
+\end{frame}
+
+\begin{frame}
+	\frametitle{T2-weighted MR Images}
+	\begin{columns}[c] % The "c" option specifies centered vertical alignment while the "t" option is used for top vertical alignment
+		\column{.48\textwidth} % Left column and width
+		\begin{figure}[ht]
+			\centering
+			\includegraphics[width=0.8\textwidth]{../figures/axial.png}
+			\caption{Axial T2 MR Image}
+			\label{fig:axial-t2}
+		\end{figure}
+		
+		\column{.48\textwidth} % Right column and width
+		\begin{figure}[ht]
+			\centering
+			\includegraphics[width=0.8\textwidth]{../figures/coronal.png}
+			\caption{Coronal T2 MR Image}
+			\label{fig:coronal-t2}
+		\end{figure}
+		
+		\end{columns}
 \end{frame}
 
 % ------------------------------------------------
-\section{Second Section}
+
+\begin{frame}
+\frametitle{Machine Learning Challenges}
+\begin{block}{Limited Dataset}
+We had only 233 cases for both modalities (Axial and Coronal T2 images) collected by St Mark's Hospital. Data scarcity limits the potential to train a high-performing and generalized model.
+\end{block}
+
+\begin{block}{Lack of Gold-Standard Labels}
+We had only less than 40 gold-standard segmentations for each modality. Generating gold-standard segmentation is often time-consuming and requires expert knowledge which further adds to this challenge.
+\end{block}
+
+\begin{block}{Utilisation of Unlabelled Data}
+Another challenge lies in finding an effective way to utilise the unlabelled data in the training process, which also contributes to creating a more comprehensive and robust model.
+\end{block}
+\end{frame}
+
+% ------------------------------------------------
+\section{Methodology}
 % ------------------------------------------------
 
+\begin{frame}
+	\frametitle{Overview of the Methodology}
+	Our methodology involves a two-phased training algorithm to effectively utilise the available data and maintain segmentation precision. 
+\begin{itemize}
+	\item \textbf{Proxy Model Training:} The initial phase involves generating "weak labels" for the unannotated data using a fine-tuned MedSAM model. A proxy model is then trained on these weak labels using the nnU-Net architecture.
+	\item \textbf{Target Model Training:} The second phase leverages the proxy model, further training it on 80\% of fully annotated data to generate the final target model.
+\end{itemize}
+This approach aims to maximise data utilisation and maintain high precision in the terminal ileum segmentation. The effectiveness of the model is assessed by the Dice similarity coefficient on the remaining 20\% of the fully annotated data.
+\end{frame}
 \begin{frame}
 \frametitle{Table}
 \begin{table}
